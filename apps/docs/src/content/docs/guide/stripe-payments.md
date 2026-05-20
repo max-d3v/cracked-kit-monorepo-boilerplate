@@ -19,14 +19,14 @@ After setup, users can:
 1. User clicks "Upgrade" → frontend calls `/api/checkout` with `priceId`
 2. API creates Stripe Checkout Session → returns session URL
 3. User completes payment on Stripe → Stripe sends webhook to `/api/webhooks/stripe`
-4. Webhook updates `user_preferences` table with subscription data
+4. Webhook updates the `subscription` table with subscription data
 5. User redirected back to `/dashboard/billing?success=true`
 
 **Key Parts:**
 
 - **`@workspace/payment`**: Stripe client, checkout, webhook handlers
 - **API routes**: `/api/checkout`, `/api/billing-portal`, `/api/webhooks/stripe`
-- **Database**: `user_preferences` stores `stripeCustomerId`, `stripeSubscriptionId`, `plan`, etc.
+- **Database**: the `subscription` table stores `stripeCustomerId`, `stripeSubscriptionId`, `plan`, etc.
 - **Frontend**: Billing page shows current plan, upgrade buttons
 
 ## Setup
@@ -204,7 +204,7 @@ If you see `[400]` or `[500]`, check API logs for errors.
 
 ```bash
 pnpm db:studio
-# Open user_preferences table
+# Open subscription table
 # You should see:
 # - plan: "pro"
 # - stripeCustomerId: "cus_..."

@@ -8,7 +8,7 @@ import {
   create,
   get,
   updateOne,
-} from "@workspace/repository/entities/user-preferences";
+} from "@workspace/repository/entities/subscription";
 import type {
   HandleStripeWebhook,
   HandleStripeWebhookResponse,

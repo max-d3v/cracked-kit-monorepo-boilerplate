@@ -129,7 +129,7 @@ export const updateOne = async (id, data) => {
 };
 ```
 
-Each entity file (users, tasks, user-preferences) exports standalone functions. The repository never checks ownership or authorization -- it just executes queries.
+Each entity file (users, tasks, subscription) exports standalone functions. The repository never checks ownership or authorization -- it just executes queries.
 
 **Exports:** `./entities/*` (per-entity data access functions).
 
@@ -144,15 +144,10 @@ Business logic and authorization. Orchestrates repository calls, enforces owners
 ```typescript
 // packages/core/src/use-cases/tasks.ts
 import * as tasksRepository from "@workspace/repository/entities/tasks";
-import * as userPreferencesRepository from "@workspace/repository/entities/user-preferences";
 import { assertTaskOwnership } from "../authorization/tasks";
 
 export const createTask = async ({ userId, title, description }) => {
-  // Business rule: use the user's default task status from preferences
-  const preferences = await userPreferencesRepository.getOrCreate({ userId });
-  const status = preferences.defaultTaskStatus ?? "todo";
-
-  return tasksRepository.create({ userId, title, description, status });
+  return tasksRepository.create({ userId, title, description, status: "todo" });
 };
 
 export const updateTask = async ({ userId, taskId, data }) => {
@@ -291,7 +286,6 @@ export const tasksRouter = {
 // packages/rpc/src/index.ts
 export const router = {
   tasks: tasksRouter,
-  preferences: preferencesRouter,
   account: accountRouter,
   billing: billingRouter,
 };

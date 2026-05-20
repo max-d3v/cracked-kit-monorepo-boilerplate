@@ -82,7 +82,6 @@ export const authMiddleware = async ({ context, next }) => {
 // src/index.ts
 export const router = {
   tasks: tasksRouter,
-  preferences: preferencesRouter,
   account: accountRouter,
   billing: billingRouter,
 };

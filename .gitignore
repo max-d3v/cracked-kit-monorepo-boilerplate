@@ -46,3 +46,7 @@ npm-debug.log*
 /.claude/worktrees/
 
 RFC.md
+
+.playwright-mcp/
+
+*.png

@@ -6,7 +6,6 @@ import {
   list,
   updateOne,
 } from "@workspace/repository/entities/tasks";
-import { getOrCreate } from "@workspace/repository/entities/user-preferences";
 import type { TaskRawObject } from "@workspace/types/repository/tasks";
 import type {
   CompleteTask,
@@ -38,10 +37,6 @@ export const getUserTasksWithCount = async (params: GetUserTasksInput) => {
 export const createTask = async (params: CreateTask) => {
   const { userId, title, description } = params;
 
-  const preferences = await getOrCreate({ userId });
-  const defaultStatus =
-    (preferences.defaultTaskStatus as TaskRawObject["status"]) ?? "todo";
-
   capture({
     event: EVENTS.task_created,
     userId,
@@ -51,11 +46,11 @@ export const createTask = async (params: CreateTask) => {
     },
   });
 
-  return create({
+  return await create({
     userId,
     title,
     description: description ?? null,
-    status: defaultStatus,
+    status: "todo",
   });
 };
 

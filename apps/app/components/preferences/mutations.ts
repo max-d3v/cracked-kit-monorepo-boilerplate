@@ -4,18 +4,6 @@ import type { QueryClient } from "@tanstack/react-query";
 import { orpc } from "@workspace/data-layer/orpc.tanstack";
 import { toast } from "sonner";
 
-export function updatePreferences(queryClient: QueryClient) {
-  return orpc.preferences.update.mutationOptions({
-    meta: { errorTitle: "Failed to save settings" },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: orpc.preferences.get.key(),
-      });
-      toast.success("Settings saved successfully!");
-    },
-  });
-}
-
 export function updateProfile(queryClient: QueryClient) {
   return orpc.users.updateProfile.mutationOptions({
     meta: { errorTitle: "Failed to update profile" },

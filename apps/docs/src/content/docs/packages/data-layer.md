@@ -107,7 +107,7 @@ This `orpc` object mirrors the router structure and provides TanStack Query help
 ```typescript
 // Query options for useSuspenseQuery / useQuery
 orpc.tasks.getUserTasksWithCount.queryOptions()
-orpc.preferences.get.queryOptions()
+orpc.billing.getSubscription.queryOptions()
 
 // Mutation options for useMutation
 orpc.tasks.create.mutationOptions()

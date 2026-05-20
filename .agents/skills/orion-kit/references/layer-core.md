@@ -81,7 +81,7 @@ export const deleteEntity = async (params: {
   return entityRepository.deleteOne({ id: entityId });
 };
 
-// Create with cross-entity composition (e.g. reading preferences)
+// Create with cross-entity composition (e.g. reading the user's subscription)
 export const createEntity = async (params: {
   userId: string;
   title: string;
@@ -89,11 +89,11 @@ export const createEntity = async (params: {
 }) => {
   const { userId, title, description } = params;
 
-  // Example: reading preferences to get default values
-  const preferences = await userPreferencesRepository.getOrCreate({ userId });
-  const defaultStatus = preferences.defaultEntityStatus ?? "active";
+  // Example: composing another repository (gate behaviour on the plan)
+  const subscription = await subscriptionRepository.getOrCreate({ userId });
+  const status = subscription.plan === "pro" ? "active" : "draft";
 
-  return entityRepository.create({ userId, title, description: description ?? null, status: defaultStatus });
+  return entityRepository.create({ userId, title, description: description ?? null, status });
 };
 ```
 

@@ -29,7 +29,7 @@ packages/repository/src/
 └── entities/
     ├── tasks.ts              # Task CRUD + search + pagination
     ├── users.ts              # User CRUD + search + pagination
-    └── user-preferences.ts   # Preferences CRUD + getOrCreate
+    └── subscription.ts       # Subscription CRUD + getOrCreate
 ```
 
 Each entity file exports standalone async functions. No classes, no dependency injection -- just functions that use the shared database client.
@@ -113,14 +113,14 @@ export const deleteOne = async (id: string) => { ... };
 
 Same pattern: CRUD + search + pagination. Users can be searched by name or email using `ilike`.
 
-## Entity: User Preferences
+## Entity: Subscription
 
 ```typescript
-// src/entities/user-preferences.ts
+// src/entities/subscription.ts
 
 export const get = async ({ userId }) => { ... };
 
-// Creates default preferences if none exist
+// Creates a default (free) subscription record if none exists
 export const getOrCreate = async ({ userId }) => {
   const existing = await get({ userId });
   if (existing) return existing;
@@ -132,7 +132,7 @@ export const updateOne = async (userId, data) => { ... };
 export const deleteOne = async (userId) => { ... };
 ```
 
-The `getOrCreate` pattern handles first-time users who don't have preferences yet.
+The `getOrCreate` pattern handles first-time users who don't have a subscription record yet.
 
 ## Query Patterns
 

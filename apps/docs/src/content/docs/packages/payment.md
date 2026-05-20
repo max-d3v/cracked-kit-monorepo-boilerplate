@@ -36,7 +36,7 @@ packages/payment/src/
 - **`apps/api/app/billing-portal/route.ts`** - Opens Stripe Customer Portal
 - **`apps/api/app/webhooks/stripe/route.ts`** - Receives Stripe events, updates DB
 - **`apps/app/components/billing/`** - Displays pricing cards and subscription status
-- **`packages/database/src/schema/user-preferences.ts`** - Stores subscription data
+- **`packages/database/src/schema.ts`** (`subscription` table) - Stores subscription data
 
 ## How It Works
 
@@ -85,11 +85,11 @@ stripe listen --forward-to localhost:3002/webhooks/stripe
 
 ### 3. Database Schema
 
-Subscription data is stored in `user_preferences` table:
+Subscription data is stored in the `subscription` table:
 
 ```sql
 -- Auto-created by Drizzle
-CREATE TABLE user_preferences (
+CREATE TABLE subscription (
   plan VARCHAR(50) DEFAULT 'free',
   stripe_customer_id VARCHAR(255),
   stripe_subscription_id VARCHAR(255),
@@ -216,7 +216,7 @@ Processes Stripe webhook events:
 
 ```typescript
 import { handleWebhookEvent } from "@workspace/payment/webhooks";
-import { db, userPreferences } from "@workspace/database";
+import { db, subscription } from "@workspace/database";
 
 export async function POST(request: Request) {
   const signature = request.headers.get("stripe-signature");
@@ -231,15 +231,15 @@ export async function POST(request: Request) {
   await handleWebhookEvent(event, {
     updateUserSubscription: async (data) => {
       await db
-        .update(userPreferences)
+        .update(subscription)
         .set(data)
-        .where(eq(userPreferences.userId, data.userId));
+        .where(eq(subscription.userId, data.userId));
     },
     cancelUserSubscription: async (userId) => {
       await db
-        .update(userPreferences)
+        .update(subscription)
         .set({ plan: "free" })
-        .where(eq(userPreferences.userId, userId));
+        .where(eq(subscription.userId, userId));
     },
   });
 
@@ -318,7 +318,7 @@ Any future expiry date, any CVC, any ZIP.
 4. Use test card `4242 4242 4242 4242`
 5. Complete checkout
 6. Verify webhook received `[200]` in terminal
-7. Check `pnpm db:studio` → `user_preferences` → `plan` should be `"pro"`
+7. Check `pnpm db:studio` → `subscription` → `plan` should be `"pro"`
 
 ## Production Deployment
 

@@ -27,26 +27,9 @@ export const organizationRole = pgEnum("organization_roles", [
   "member",
 ]);
 
-export const userPreference = pgTable("user_preferences", {
+export const subscription = pgTable("subscription", {
   id: uuid().default(sql`gen_random_uuid()`).primaryKey(),
   userId: varchar("user_id", { length: 255 }).notNull().unique(),
-
-  theme: varchar({ length: 50 }).default("system"),
-  language: varchar({ length: 10 }).default("en"),
-  timezone: varchar({ length: 100 }),
-
-  defaultTaskStatus: varchar("default_task_status", { length: 50 }).default(
-    "todo"
-  ),
-
-  emailNotifications: varchar("email_notifications", { length: 50 }).default(
-    "enabled"
-  ),
-  taskReminders: varchar("task_reminders", { length: 50 }).default("enabled"),
-  weeklyDigest: varchar("weekly_digest", { length: 50 }).default("disabled"),
-  pushNotifications: varchar("push_notifications", { length: 50 }).default(
-    "disabled"
-  ),
 
   plan: varchar({ length: 50 }).default("free"),
   stripeCustomerId: varchar("stripe_customer_id", { length: 255 }),
@@ -77,9 +60,9 @@ export const task = pgTable("task", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const userPreferenceRelations = relations(userPreference, ({ one }) => ({
+export const subscriptionRelations = relations(subscription, ({ one }) => ({
   user: one(authSchema.user, {
-    fields: [userPreference.userId],
+    fields: [subscription.userId],
     references: [authSchema.user.id],
   }),
 }));
@@ -92,9 +75,9 @@ export const taskRelations = relations(task, ({ one }) => ({
 }));
 
 export const schema = {
-  userPreference,
+  subscription,
   task,
-  userPreferenceRelations,
+  subscriptionRelations,
   taskRelations,
   ...authSchema,
 };

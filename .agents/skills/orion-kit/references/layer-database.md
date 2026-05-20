@@ -54,7 +54,7 @@ export const tasks = pgTable("tasks", {
 
 // 3. Register in the schema export object at bottom of file
 export const schema = {
-  userPreferences,
+  subscription,
   tasks,
   users,
   // add new table here ↑

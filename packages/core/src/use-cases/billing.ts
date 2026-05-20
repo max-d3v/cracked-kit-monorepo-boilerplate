@@ -7,7 +7,7 @@ import {
 import {
   getOrCreate,
   updateOne,
-} from "@workspace/repository/entities/user-preferences";
+} from "@workspace/repository/entities/subscription";
 import type {
   CancelUserSubscription,
   CreateUserBillingPortalSession,
@@ -22,16 +22,18 @@ import {
 export const getSubscriptionStatus = async (params: GetSubscriptionStatus) => {
   const { userId } = params;
 
-  const preferences = await getOrCreate({ userId });
+  const userSubscription = await getOrCreate({ userId });
 
-  if (!preferences.stripeSubscriptionId) {
+  if (!userSubscription.stripeSubscriptionId) {
     return { subscription: null, plan: "free" };
   }
 
-  const subscription = await getSubscription(preferences.stripeSubscriptionId);
+  const subscription = await getSubscription(
+    userSubscription.stripeSubscriptionId
+  );
 
   if (!subscription) {
-    return { subscription: null, plan: preferences.plan ?? "free" };
+    return { subscription: null, plan: userSubscription.plan ?? "free" };
   }
 
   return { subscription, plan: subscription.plan };
@@ -42,10 +44,10 @@ export const cancelUserSubscription = async (
 ) => {
   const { userId } = params;
 
-  const preferences = await getOrCreate({ userId });
-  assertHasSubscription(preferences);
+  const userSubscription = await getOrCreate({ userId });
+  assertHasSubscription(userSubscription);
 
-  await cancelSubscription(preferences.stripeSubscriptionId as string);
+  await cancelSubscription(userSubscription.stripeSubscriptionId as string);
 
   await updateOne({
     userId,
@@ -73,11 +75,11 @@ export const createUserBillingPortalSession = async (
 ) => {
   const { userId } = params;
 
-  const preferences = await getOrCreate({ userId });
-  assertHasStripeCustomer(preferences);
+  const userSubscription = await getOrCreate({ userId });
+  assertHasStripeCustomer(userSubscription);
 
   const session = await createBillingPortalSession(
-    preferences.stripeCustomerId as string
+    userSubscription.stripeCustomerId as string
   );
 
   return { url: session.url };

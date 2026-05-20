@@ -1,0 +1,12 @@
+ALTER TYPE "public"."tenant_roles" RENAME TO "organization_roles";--> statement-breakpoint
+ALTER TABLE "user_preferences" RENAME TO "subscription";--> statement-breakpoint
+ALTER TABLE "subscription" DROP CONSTRAINT "user_preferences_user_id_unique";--> statement-breakpoint
+ALTER TABLE "subscription" DROP COLUMN "theme";--> statement-breakpoint
+ALTER TABLE "subscription" DROP COLUMN "language";--> statement-breakpoint
+ALTER TABLE "subscription" DROP COLUMN "timezone";--> statement-breakpoint
+ALTER TABLE "subscription" DROP COLUMN "default_task_status";--> statement-breakpoint
+ALTER TABLE "subscription" DROP COLUMN "email_notifications";--> statement-breakpoint
+ALTER TABLE "subscription" DROP COLUMN "task_reminders";--> statement-breakpoint
+ALTER TABLE "subscription" DROP COLUMN "weekly_digest";--> statement-breakpoint
+ALTER TABLE "subscription" DROP COLUMN "push_notifications";--> statement-breakpoint
+ALTER TABLE "subscription" ADD CONSTRAINT "subscription_user_id_unique" UNIQUE("user_id");

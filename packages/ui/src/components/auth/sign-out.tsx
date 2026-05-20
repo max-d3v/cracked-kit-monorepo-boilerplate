@@ -1,14 +1,15 @@
-"use client";
+"use client"
 
-import { useAuth, useSignOut } from "@better-auth-ui/react";
-import { Spinner } from "@workspace/ui/components/spinner";
-import { cn } from "@workspace/ui/lib/utils";
-import { useEffect, useRef } from "react";
-import { toast } from "sonner";
+import { useAuth, useSignOut } from "@better-auth-ui/react"
+import { useEffect, useRef } from "react"
+import { toast } from "sonner"
+
+import { Spinner } from "@workspace/ui/components/spinner"
+import { cn } from "@workspace/ui/lib/utils"
 
 export type SignOutProps = {
-  className?: string;
-};
+  className?: string
+}
 
 /**
  * Signs the current user out on mount and renders a centered spinner while the operation completes.
@@ -17,34 +18,32 @@ export type SignOutProps = {
  * @returns The spinner shown during sign-out
  */
 export function SignOut({ className }: SignOutProps) {
-  const { basePaths, navigate, viewPaths } = useAuth();
+  const { authClient, basePaths, navigate, viewPaths } = useAuth()
 
-  const { mutate: signOut } = useSignOut({
+  const { mutate: signOut } = useSignOut(authClient, {
     onError: (error) => {
-      toast.error(error.error?.message || error.message);
+      toast.error(error.error?.message || error.message)
 
       navigate({
         to: `${basePaths.auth}/${viewPaths.auth.signIn}`,
-        replace: true,
-      });
+        replace: true
+      })
     },
     onSuccess: () =>
       navigate({
         to: `${basePaths.auth}/${viewPaths.auth.signIn}`,
-        replace: true,
-      }),
-  });
+        replace: true
+      })
+  })
 
-  const hasSignedOut = useRef(false);
+  const hasSignedOut = useRef(false)
 
   useEffect(() => {
-    if (hasSignedOut.current) {
-      return;
-    }
-    hasSignedOut.current = true;
+    if (hasSignedOut.current) return
+    hasSignedOut.current = true
 
-    signOut();
-  }, [signOut]);
+    signOut()
+  }, [signOut])
 
-  return <Spinner className={cn("mx-auto my-auto", className)} />;
+  return <Spinner className={cn("mx-auto my-auto", className)} />
 }

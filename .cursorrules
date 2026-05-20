@@ -166,7 +166,7 @@ await db.insert(tasks).values(validated);
 
 - **Components:** PascalCase (`TasksList`, `CreateTaskForm`)
 - **Files:** kebab-case (`use-tasks.ts`, `error-fallback.tsx`)
-- **Functions:** camelCase (`createTask`, `getUserPreferences`)
+- **Functions:** camelCase (`createTask`, `getUserTasks`)
 - **Constants:** UPPER_SNAKE_CASE (`API_BASE_URL`, `MAX_RETRIES`)
 - **Types/Interfaces:** PascalCase (`Task`, `CreateTaskInput`)
 - **Zod Schemas:** camelCase with `Schema` suffix (`createTaskInputSchema`)

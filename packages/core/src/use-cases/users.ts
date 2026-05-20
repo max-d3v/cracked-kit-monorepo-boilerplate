@@ -1,5 +1,5 @@
+import { deleteAllByUserId as deleteAllSubscriptionsByUserId } from "@workspace/repository/entities/subscription";
 import { deleteAllByUserId as deleteAllTasksByUserId } from "@workspace/repository/entities/tasks";
-import { deleteOne as deleteUserPreferences } from "@workspace/repository/entities/user-preferences";
 import {
   deleteOne as deleteUser,
   get,
@@ -50,7 +50,7 @@ export const deleteAccount = async (
   const { userId } = params;
 
   await deleteAllTasksByUserId({ userId });
-  await deleteUserPreferences({ userId });
+  await deleteAllSubscriptionsByUserId({ userId });
   await deleteUser({ id: userId });
 
   return { deleted: true };

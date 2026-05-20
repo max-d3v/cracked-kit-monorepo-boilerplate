@@ -59,34 +59,20 @@ export const users = pgTable("users", {
 });
 ```
 
-### User Preferences Table
+### Subscription Table
 
 ```typescript
-export const userPreferences = pgTable("user_preferences", {
+export const subscription = pgTable("subscription", {
   id: uuid().primaryKey().defaultRandom(),
   userId: varchar("user_id", { length: 255 }).unique().notNull(),
 
-  // Display preferences
-  theme: varchar({ length: 50 }).default("system"),
-  language: varchar({ length: 10 }).default("en"),
-  timezone: varchar({ length: 100 }),
-
-  // Task defaults
-  defaultTaskStatus: varchar("default_task_status", { length: 50 }).default("todo"),
-
-  // Notifications
-  emailNotifications: boolean("email_notifications").default(true),
-  taskReminders: boolean("task_reminders").default(false),
-  weeklyDigest: boolean("weekly_digest").default(true),
-  pushNotifications: boolean("push_notifications").default(false),
-
   // Stripe billing
+  plan: varchar({ length: 50 }).default("free"),
   stripeCustomerId: varchar("stripe_customer_id", { length: 255 }),
   stripeSubscriptionId: varchar("stripe_subscription_id", { length: 255 }),
   stripeSubscriptionStatus: varchar("stripe_subscription_status", { length: 50 }),
   stripePriceId: varchar("stripe_price_id", { length: 255 }),
   stripeCurrentPeriodEnd: timestamp("stripe_current_period_end"),
-  plan: varchar({ length: 50 }).default("free"),
 
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),

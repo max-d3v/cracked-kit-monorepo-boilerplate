@@ -15,6 +15,13 @@
       "when": 1777593585907,
       "tag": "0001_funny_albert_cleary",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1778886652346,
+      "tag": "0002_sudden_doctor_faustus",
+      "breakpoints": true
     }
   ]
 }

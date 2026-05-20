@@ -1,70 +1,67 @@
-"use client";
+"use client"
 
-import { providerIcons, useAuth, useSignInSocial } from "@better-auth-ui/react";
-import { getProviderName } from "@better-auth-ui/core";
-import { Button } from "@workspace/ui/components/button";
-import { Spinner } from "@workspace/ui/components/spinner";
-import type { SocialProvider } from "better-auth/social-providers";
-import { type ComponentProps, useState } from "react";
+import { authMutationKeys, getProviderName } from "@better-auth-ui/core"
+import { providerIcons, useAuth, useSignInSocial } from "@better-auth-ui/react"
+import { useIsMutating } from "@tanstack/react-query"
+import type { SocialProvider } from "better-auth/social-providers"
+import type { ComponentProps } from "react"
+
+import { Button } from "@workspace/ui/components/button"
+import { Spinner } from "@workspace/ui/components/spinner"
 
 export type ProviderButtonProps = {
-  provider: SocialProvider;
-  label?: "continueWith" | "providerName" | "none";
-  isDisabled?: boolean;
-} & Omit<ComponentProps<typeof Button>, "onClick" | "disabled" | "children">;
+  provider: SocialProvider
+  display?: "full" | "name" | "icon"
+} & Omit<ComponentProps<typeof Button>, "onClick" | "children" | "disabled">
 
 /**
- * Render a single social provider sign-in button with its own mutation and pending state.
+ * Social provider sign-in button.
  *
- * @param provider - The social provider this button signs in with.
- * @param label - Label style: `"continueWith"` (e.g. "Continue with Google"), `"providerName"` (e.g. "Google"), or `"none"` (icon only).
- * @param isDisabled - External disabled state (e.g. the parent form is submitting).
+ * @param provider - Provider to sign in with.
+ * @param display - `"full"` (e.g. "Continue with Google"), `"name"` (just the provider name), or `"icon"` (icon only).
  */
 export function ProviderButton({
   provider,
-  label = "continueWith",
-  isDisabled,
+  display = "full",
   variant = "outline",
   ...props
 }: ProviderButtonProps) {
-  const { baseURL, localization, redirectTo } = useAuth();
+  const { authClient, baseURL, localization, redirectTo } = useAuth()
 
-  const callbackURL = `${baseURL}${redirectTo}`;
+  const callbackURL = `${baseURL}${redirectTo}`
 
-  const [redirecting, setRedirecting] = useState(false);
+  const { mutate: signInSocial, isPending: signInSocialPending } =
+    useSignInSocial(authClient)
 
-  const { mutate: signInSocial, isPending } = useSignInSocial({
-    onSuccess: () => {
-      setRedirecting(true);
+  const ProviderIcon = providerIcons[provider]
 
-      setTimeout(() => {
-        setRedirecting(false);
-      }, 5000);
-    },
-  });
-
-  const ProviderIcon = providerIcons[provider];
-
-  const pending = isPending || redirecting;
+  const signInMutating = useIsMutating({
+    mutationKey: authMutationKeys.signIn.all
+  })
+  const signUpMutating = useIsMutating({
+    mutationKey: authMutationKeys.signUp.all
+  })
+  const isPending = signInMutating + signUpMutating > 0
 
   return (
     <Button
-      disabled={isDisabled || pending}
-      onClick={() => signInSocial({ provider, callbackURL })}
       type="button"
       variant={variant}
+      disabled={isPending}
+      onClick={() => signInSocial({ provider, callbackURL })}
       {...props}
+      aria-label={getProviderName(provider)}
     >
-      {pending ? <Spinner /> : <ProviderIcon />}
+      {signInSocialPending ? <Spinner /> : <ProviderIcon />}
 
-      {label === "continueWith"
+      {display === "full"
         ? localization.auth.continueWith.replace(
             "{{provider}}",
             getProviderName(provider)
           )
-        : label === "providerName"
+        : display === "name"
           ? getProviderName(provider)
           : null}
     </Button>
-  );
+  )
 }

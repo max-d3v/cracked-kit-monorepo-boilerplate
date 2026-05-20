@@ -63,7 +63,7 @@ Studio displays the tables defined in `@workspace/database/schema`:
 | Table | Purpose |
 | ----- | ------- |
 | `users` | User accounts (id, name, email, password, timestamps) |
-| `user_preferences` | Settings + Stripe billing (theme, notifications, stripe IDs, plan) |
+| `subscription` | Stripe billing (plan, stripe customer/subscription IDs, status) |
 | `tasks` | User tasks (title, description, status, due date, timestamps) |
 
 ## Common Workflows

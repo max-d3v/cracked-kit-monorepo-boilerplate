@@ -54,11 +54,9 @@ export const getUserTasksWithCount = async ({ userId }) => {
   return { tasks, taskCounts };
 };
 
-// Creates a task using the user's default status from preferences
+// Creates a task with the default status
 export const createTask = async ({ userId, title, description }) => {
-  const preferences = await userPreferencesRepository.getOrCreate({ userId });
-  const status = preferences.defaultTaskStatus ?? "todo";
-  return tasksRepository.create({ userId, title, description, status });
+  return tasksRepository.create({ userId, title, description, status: "todo" });
 };
 
 // Updates a task after verifying ownership
@@ -82,21 +80,21 @@ export const deleteTask = async ({ userId, taskId }) => {
 // src/use-cases/billing.ts
 
 export const getSubscriptionStatus = async ({ userId }) => {
-  const preferences = await userPreferencesRepository.get({ userId });
-  assertHasStripeCustomer(preferences);
-  assertHasSubscription(preferences);
-  return getSubscription(preferences.stripeSubscriptionId);
+  const subscription = await subscriptionRepository.get({ userId });
+  assertHasStripeCustomer(subscription);
+  assertHasSubscription(subscription);
+  return getSubscription(subscription.stripeSubscriptionId);
 };
 
 export const cancelUserSubscription = async ({ userId }) => {
-  const preferences = await userPreferencesRepository.get({ userId });
-  assertHasSubscription(preferences);
-  return cancelSubscription(preferences.stripeSubscriptionId);
+  const subscription = await subscriptionRepository.get({ userId });
+  assertHasSubscription(subscription);
+  return cancelSubscription(subscription.stripeSubscriptionId);
 };
 
 export const createUserCheckoutSession = async ({ userId, email, priceId }) => {
-  const preferences = await userPreferencesRepository.getOrCreate({ userId });
-  return createCheckoutSession({ userId, email, priceId, customerId: preferences.stripeCustomerId });
+  const subscription = await subscriptionRepository.getOrCreate({ userId });
+  return createCheckoutSession({ userId, email, priceId, customerId: subscription.stripeCustomerId });
 };
 ```
 
@@ -111,20 +109,6 @@ export const updateProfile = async ({ userId, name }) => {
 
 export const deleteAccount = async ({ userId }) => {
   return usersRepository.deleteOne(userId);
-};
-```
-
-### Preferences
-
-```typescript
-// src/use-cases/preferences.ts
-
-export const getOrCreatePreferences = async ({ userId }) => {
-  return userPreferencesRepository.getOrCreate({ userId });
-};
-
-export const updatePreferences = async ({ userId, data }) => {
-  return userPreferencesRepository.updateOne(userId, data);
 };
 ```
 

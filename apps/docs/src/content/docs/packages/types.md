@@ -29,12 +29,11 @@ packages/types/src/
 │   ├── base.ts               # Shared pagination types
 │   ├── tasks.ts              # TaskRawObject, CreateTaskParams, etc.
 │   ├── users.ts              # UserRawObject, CreateUserParams, etc.
-│   └── user-preferences.ts   # UserPreferenceRawObject, etc.
+│   └── subscription.ts       # SubscriptionRawObject, etc.
 ├── use-cases/
 │   ├── tasks.ts              # createTaskInputSchema, UpdateTaskInput, etc.
 │   ├── account.ts            # AuthUser, UpdateProfileInput, etc.
-│   ├── billing.ts            # CreateCheckoutSessionInput, SubscriptionResponse
-│   └── preferences.ts        # UpdatePreferencesInput, PreferencesResponse
+│   └── billing.ts            # CreateCheckoutSessionInput, SubscriptionResponse
 ├── errors/
 │   └── http.ts               # HttpError class
 ├── payments/

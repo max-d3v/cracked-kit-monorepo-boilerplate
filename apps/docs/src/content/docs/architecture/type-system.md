@@ -12,7 +12,7 @@ Database schema is the source of truth. Drizzle ORM infers entity types. The `@w
 ```
 Drizzle Schema (source of truth)
        │
-       ├─> Inferred entity types (Task, User, UserPreference)
+       ├─> Inferred entity types (Task, User, Subscription)
        ├─> Drizzle-Zod auto-generated schemas
        │
        ▼
@@ -41,7 +41,7 @@ Apps (automatic type inference via oRPC)
 
 | Type Category | Owner Package | Example |
 | ------------- | ------------- | ------- |
-| Database entities | `@workspace/database` | `tasks`, `users`, `userPreferences` tables |
+| Database entities | `@workspace/database` | `tasks`, `users`, `subscription` tables |
 | Raw object types | `@workspace/types/repository/*` | `TaskRawObject`, `UserRawObject` |
 | Use case inputs | `@workspace/types/use-cases/*` | `createTaskInputSchema`, `UpdateTaskInput` |
 | Error types | `@workspace/types/errors/*` | `HttpError` |

@@ -16,7 +16,6 @@ export type WhereParams = {
 
 export type JoinableParams = {
   organization: boolean;
-  preferences: boolean;
   tasks: boolean;
   memberships: boolean;
 };

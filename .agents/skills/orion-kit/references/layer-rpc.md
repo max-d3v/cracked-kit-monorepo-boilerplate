@@ -78,14 +78,12 @@ Source: `packages/rpc/src/index.ts`
 ```ts
 import accountRouter     from "./routers/account";
 import billingRouter     from "./routers/billing";
-import preferencesRouter from "./routers/preferences";
 import tasksRouter       from "./routers/tasks";
 // Add your new router import here ↓
 import <entity>Router   from "./routers/<entity>";
 
 export const router = {
   tasks:       tasksRouter,
-  preferences: preferencesRouter,
   account:     accountRouter,
   billing:     billingRouter,
   // Register here ↓ (key becomes the namespace in orpc.<key>.method)

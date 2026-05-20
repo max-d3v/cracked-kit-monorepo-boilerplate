@@ -35,7 +35,7 @@ export const <entities> = pgTable("<entities>", {
 
 // 1c. Register in schema export at bottom of file
 export const schema = {
-  userPreferences,
+  subscription,
   tasks,
   users,
   <entities>,   // ← add here

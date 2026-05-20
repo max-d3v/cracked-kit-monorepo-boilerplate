@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { db } from "./client";
-import { task, userPreference } from "./schema";
+import { task } from "./schema";
 
 async function seed() {
   console.log("🌱 Seeding database...");
@@ -8,19 +8,6 @@ async function seed() {
   try {
     // Demo account user ID
     const demoUserId = "360d6acb-686f-446d-8a45-0a8f82e55c9a";
-
-    await db
-      .insert(userPreference)
-      .values({
-        userId: demoUserId,
-        theme: "system",
-        language: "en",
-        timezone: "UTC",
-        emailNotifications: "enabled",
-        pushNotifications: "disabled",
-      })
-      .onConflictDoNothing()
-      .returning();
 
     const demoTasks = [
       {

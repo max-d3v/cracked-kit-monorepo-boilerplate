@@ -1,10 +1,10 @@
 import { HttpError } from "@workspace/types/errors/http";
-import type { UserPreferenceRawObject } from "@workspace/types/repository/user-preferences";
+import type { SubscriptionRawObject } from "@workspace/types/repository/subscription";
 
 export const assertHasStripeCustomer = (
-  preferences: UserPreferenceRawObject
+  subscription: SubscriptionRawObject
 ): void => {
-  if (!preferences.stripeCustomerId) {
+  if (!subscription.stripeCustomerId) {
     throw new HttpError(
       400,
       "No active subscription found. Please subscribe to a plan first."
@@ -13,9 +13,9 @@ export const assertHasStripeCustomer = (
 };
 
 export const assertHasSubscription = (
-  preferences: UserPreferenceRawObject
+  subscription: SubscriptionRawObject
 ): void => {
-  if (!preferences.stripeSubscriptionId) {
+  if (!subscription.stripeSubscriptionId) {
     throw new HttpError(400, "No active subscription");
   }
 };
