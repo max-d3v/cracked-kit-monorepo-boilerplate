@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+@source "../**/*.{ts,tsx}";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #f0e9d8;
+  --foreground: #000000;
+
+  --main: #ffdc58;
+  --main-foreground: #000000;
+
+  --accent-pink: #ff66c4;
+  --accent-lime: #a3e635;
+  --accent-blue: #88aaee;
+  --accent-purple: #c084fc;
+  --accent-red: #ff6b6b;
+
+  --secondary-background: #ffffff;
+  --secondary-foreground: #000000;
+
+  --muted: #f3eedb;
+  --muted-foreground: #555555;
+
+  --border: #000000;
+  --ring: #000000;
+
+  --shadow-color: rgba(0, 0, 0, 1);
+  --shadow-offset-x: 4px;
+  --shadow-offset-y: 4px;
+
+  --radius: 5px;
+}
+
+.dark {
+  --background: #1a1a1a;
+  --foreground: #ffffff;
+
+  --main: #ffdc58;
+  --main-foreground: #000000;
+
+  --secondary-background: #2a2a2a;
+  --secondary-foreground: #ffffff;
+
+  --muted: #262626;
+  --muted-foreground: #a3a3a3;
+
+  --border: #000000;
+  --ring: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-main: var(--main);
+  --color-main-foreground: var(--main-foreground);
+  --color-accent-pink: var(--accent-pink);
+  --color-accent-lime: var(--accent-lime);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-purple: var(--accent-purple);
+  --color-accent-red: var(--accent-red);
+  --color-secondary-background: var(--secondary-background);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --shadow-brutal: 4px 4px 0px 0px var(--shadow-color);
+  --shadow-brutal-lg: 6px 6px 0px 0px var(--shadow-color);
+  --shadow-brutal-sm: 2px 2px 0px 0px var(--shadow-color);
+  --font-display: "Archivo Black", "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    color: var(--foreground);
+    background-color: var(--background);
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  .shadow-brutal {
+    box-shadow: var(--shadow-brutal);
+  }
+  .shadow-brutal-lg {
+    box-shadow: var(--shadow-brutal-lg);
+  }
+  .shadow-brutal-sm {
+    box-shadow: var(--shadow-brutal-sm);
+  }
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .bg-dots {
+    background-image: radial-gradient(rgba(0, 0, 0, 0.15) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+  .bg-stripes {
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--main) 0px,
+      var(--main) 12px,
+      #000 12px,
+      #000 14px
+    );
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}

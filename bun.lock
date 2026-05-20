@@ -77,6 +77,31 @@
         "starlight-theme-nova": "^0.9.5",
       },
     },
+    "apps/marketing-websites/brutalism": {
+      "name": "@workspace/brutalism",
+      "version": "0.0.1",
+      "dependencies": {
+        "@tailwindcss/postcss": "^4.2.2",
+        "@workspace/ui": "workspace:*",
+        "class-variance-authority": "^0.7.1",
+        "clsx": "^2.1.1",
+        "lucide-react": "^0.475.0",
+        "next": "catalog:web",
+        "next-themes": "^0.4.6",
+        "postcss": "^8.5.10",
+        "react": "catalog:web",
+        "react-dom": "catalog:web",
+        "tailwind-merge": "^3.3.1",
+        "tailwindcss": "^4.2.2",
+      },
+      "devDependencies": {
+        "@types/node": "^20.19.9",
+        "@types/react": "^19.1.9",
+        "@types/react-dom": "^19.1.7",
+        "@workspace/typescript-config": "workspace:*",
+        "typescript": "^5.9.2",
+      },
+    },
     "apps/studio": {
       "name": "@workspace/studio",
       "version": "0.0.1",
@@ -1506,6 +1531,8 @@
     "@workspace/app": ["@workspace/app@workspace:apps/app"],
 
     "@workspace/auth": ["@workspace/auth@workspace:packages/auth"],
+
+    "@workspace/brutalism": ["@workspace/brutalism@workspace:apps/marketing-websites/brutalism"],
 
     "@workspace/core": ["@workspace/core@workspace:packages/core"],
 
@@ -3211,6 +3238,10 @@
 
     "@workspace/auth/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
+    "@workspace/brutalism/@types/node": ["@types/node@20.19.37", "", { "dependencies": { "undici-types": "~6.21.0" } }, "sha512-8kzdPJ3FsNsVIurqBs7oodNnCEVbni9yUEkaHbgptDACOPW04jimGagZ51E6+lXUwJjgnBw+hyko/lkFWCldqw=="],
+
+    "@workspace/brutalism/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+
     "@workspace/database/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
     "@workspace/email/@types/node": ["@types/node@20.19.37", "", { "dependencies": { "undici-types": "~6.21.0" } }, "sha512-8kzdPJ3FsNsVIurqBs7oodNnCEVbni9yUEkaHbgptDACOPW04jimGagZ51E6+lXUwJjgnBw+hyko/lkFWCldqw=="],
@@ -3660,6 +3691,8 @@
     "@workspace/app/@types/node/undici-types": ["undici-types@6.21.0", "", {}, "sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ=="],
 
     "@workspace/auth/@types/node/undici-types": ["undici-types@7.18.2", "", {}, "sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w=="],
+
+    "@workspace/brutalism/@types/node/undici-types": ["undici-types@6.21.0", "", {}, "sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ=="],
 
     "@workspace/email/@types/node/undici-types": ["undici-types@6.21.0", "", {}, "sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ=="],
 

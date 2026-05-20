@@ -82,6 +82,7 @@
   },
   "workspaces": [
     "apps/*",
+    "apps/marketing-websites/*",
     "packages/*"
   ],
   "dependencies": {
