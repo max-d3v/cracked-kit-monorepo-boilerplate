@@ -26,6 +26,7 @@ function parseError(error: unknown): ORPCError<string, unknown> | HttpError {
   if (error instanceof ORPCError) {
     return error;
   }
+  console.error(error);
   return new HttpError(500, "Unexpected error");
 }
 
