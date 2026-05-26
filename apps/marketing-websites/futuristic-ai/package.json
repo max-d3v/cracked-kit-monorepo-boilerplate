@@ -1,0 +1,37 @@
+{
+  "name": "@workspace/futuristic",
+  "version": "0.0.1",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack --port 3006",
+    "build": "next build",
+    "start": "next start --port 3006",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.2.2",
+    "@workspace/ui": "workspace:*",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.475.0",
+    "motion": "^12.40.0",
+    "next": "catalog:web",
+    "next-themes": "^0.4.6",
+    "ogl": "^1.0.11",
+    "postcss": "^8.5.10",
+    "react": "catalog:web",
+    "react-dom": "catalog:web",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^4.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.9",
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "@workspace/typescript-config": "workspace:*",
+    "typescript": "^5.9.2"
+  }
+}

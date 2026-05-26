@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "futuristic",
+      "runtimeExecutable": "bun",
+      "runtimeArgs": ["run", "--filter", "@workspace/futuristic", "dev"],
+      "port": 3006
+    }
+  ]
+}
