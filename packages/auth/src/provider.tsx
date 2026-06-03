@@ -26,7 +26,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       plugins={[organizationPlugin()]}
       redirectTo="/dashboard"
       socialProviders={["google"]}
-      // viewPaths={{ settings: { account: "account/profile" } }}
+      viewPaths={{
+        settings: {
+          account: "account/profile",
+          organizations: "account/organizations",
+          security: "account/security",
+        },
+      }}
     >
       {children}
     </DefaultAuthProvider>

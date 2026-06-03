@@ -9,7 +9,14 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@workspace/ui/components/sidebar";
-import { ArrowLeft, Building2, User, Users } from "lucide-react";
+import {
+  ArrowLeft,
+  Briefcase,
+  Settings,
+  Shield,
+  User,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
 import { NavMain } from "@/components/nav-main";
 
@@ -22,19 +29,29 @@ const navMain = [
         url: "/settings/account/profile",
         icon: User,
       },
+      {
+        title: "Security",
+        url: "/settings/account/security",
+        icon: Shield,
+      },
+      {
+        title: "My Organizations",
+        url: "/settings/account/organizations",
+        icon: Briefcase,
+      },
     ],
   },
   {
     title: "Organization",
     items: [
       {
-        title: "General",
-        url: "/settings/organization/general",
-        icon: Building2,
+        title: "Settings",
+        url: "/settings/organization/settings",
+        icon: Settings,
       },
       {
-        title: "Members",
-        url: "/settings/organization/members",
+        title: "People",
+        url: "/settings/organization/people",
         icon: Users,
       },
     ],
