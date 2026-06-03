@@ -1,6 +1,7 @@
 "use client";
 
 import { AuthProvider as DefaultAuthProvider } from "@workspace/ui/components/auth/auth-provider";
+import { organizationPlugin } from "@workspace/ui/lib/auth/organization-plugin";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -22,9 +23,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       navigate={({ to, replace }) =>
         replace ? router.replace(to) : router.push(to)
       }
+      plugins={[organizationPlugin()]}
       redirectTo="/dashboard"
       socialProviders={["google"]}
-      viewPaths={{ settings: { account: "account/profile" } }}
+      // viewPaths={{ settings: { account: "account/profile" } }}
     >
       {children}
     </DefaultAuthProvider>

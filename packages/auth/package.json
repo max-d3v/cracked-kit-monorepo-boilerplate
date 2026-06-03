@@ -28,6 +28,7 @@
     "react": "19.2.4",
     "server-only": "^0.0.1",
     "@workspace/database": "workspace:*",
+
     "zod": "catalog:schemas"
   },
   "devDependencies": {

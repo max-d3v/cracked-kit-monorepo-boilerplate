@@ -1,5 +1,5 @@
-import { Auth } from "@workspace/ui/components/auth/custom/auth-custom";
-import { customViewPaths } from "@workspace/ui/hooks/custom-view-paths";
+import { viewPaths } from "@better-auth-ui/core";
+import { Auth } from "@workspace/ui/components/auth/auth";
 import { notFound } from "next/navigation";
 
 export default async function AuthPage({
@@ -11,7 +11,7 @@ export default async function AuthPage({
 }) {
   const { path } = await params;
 
-  if (!Object.values(customViewPaths.auth).includes(path)) {
+  if (!Object.values(viewPaths.auth).includes(path)) {
     notFound();
   }
 

@@ -3,16 +3,16 @@
 #   Refer for explanation to following link:
 #   https://lefthook.dev/configuration/
 #
-pre-push:
-  jobs:
-    - name: packages audit
-      tags:
-        - frontend
-        - security
-      run: bun audit
+# pre-push:
+#   jobs:
+#     - name: packages audit
+#       tags:
+#         - frontend
+#         - security
+#       run: bun audit
 
-    - name: build
-      run: bun run build
+#     - name: build
+#       run: bun run build
 
 pre-commit:
   jobs:

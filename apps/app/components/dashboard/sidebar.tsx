@@ -1,6 +1,6 @@
 "use client";
 
-import { OrganizationSwitcher } from "@workspace/ui/components/auth/custom/organization-switcher";
+import { OrganizationSwitcher } from "@workspace/ui/components/auth/organization/organization-switcher";
 import { UserButton } from "@workspace/ui/components/auth/user/user-button";
 import {
   Sidebar,
