@@ -10,7 +10,8 @@
     "./proxy": "./src/proxy.ts",
     "./components": "./src/components/index.ts",
     "./provider": "./src/provider.tsx",
-    "./webhook": "./src/webhook.ts"
+    "./webhook": "./src/webhook.ts",
+    "./lib/utils": "./src/lib/utils.ts"
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",

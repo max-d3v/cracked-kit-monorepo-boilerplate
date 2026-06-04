@@ -7,10 +7,13 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import type { ReactNode } from "react";
 import { authClient } from "./client";
+import { getOrganizationSlug } from "./lib/utils";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
+
+  const slug = getOrganizationSlug();
 
   return (
     <DefaultAuthProvider
@@ -25,21 +28,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       plugins={[
         organizationPlugin({
+          slug,
           viewPaths: {
             organization: {
-              settings: "../settings/organization/settings",
-              people: "../settings/organization/people",
+              settings: `../../${slug}/settings/organization/profile`,
+              people: `../../${slug}/settings/organization/people`,
             },
           },
         }),
       ]}
-      redirectTo="/dashboard"
+      redirectTo={`/${slug}/dashboard`}
       socialProviders={["google"]}
       viewPaths={{
         settings: {
-          account: "account/profile",
-          organizations: "account/organizations",
-          security: "account/security",
+          account: `../${slug}/settings/account/profile`,
+          organizations: `../${slug}/settings/account/organizations`,
+          security: `../${slug}/settings/account/security`,
         },
       }}
     >
