@@ -107,7 +107,6 @@ export default defineConfig({
             { label: "Zod Validation", slug: "guide/zod" },
             { label: "Stripe Payments", slug: "guide/stripe-payments" },
             { label: "Testing", slug: "guide/testing" },
-            { label: "E2E Testing", slug: "guide/e2e-testing" },
           ],
         },
         {

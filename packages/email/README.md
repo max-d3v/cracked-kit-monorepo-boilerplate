@@ -1,30 +1,35 @@
-# @workspace/email
+## Transactional
 
-Email package for Orion Kit using Resend and React Email.
+This is usually where you store transactional-related code of your application to organize and simplify things.
+This also allows for using the email templates you make anywhere on your codebase by just installing with
+the monorepo setup.
 
-## Features
+This also uses the [react.email](https://react.email/) CLI for previewing and compiling the email templates
+into HTML ones.
 
-- ✅ Resend integration for reliable email delivery
-- ✅ React Email for beautiful, responsive email templates
-- ✅ Type-safe email sending
-- ✅ Welcome email template
+Using the CLI you can also preview your emails, see how they are going to look and try sending them
+to yourself for testing purposes.
 
-## Usage
+### Previewing email templates
 
-```typescript
-import { sendWelcomeEmail } from "@workspace/email";
+First, install the dependencies:
 
-// Send welcome email
-await sendWelcomeEmail("user@example.com", "John Doe");
+```sh
+bun install
 ```
 
-## Environment Variables
+Then, you can run the react.email developmenet server by running:
 
-```bash
-RESEND_API_KEY=re_...
-FROM_EMAIL=onboarding@resend.dev
+```sh
+bun dev
 ```
 
-## Templates
+Open [localhost:3001](http://localhost:3001) with your browser to see the result.
 
-- `WelcomeEmail` - Welcome email for new users
+---
+
+See the [react.email docs](https://react.email/docs/introduction) for more details.
+
+## License
+
+MIT License

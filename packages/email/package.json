@@ -1,32 +1,19 @@
 {
-  "name": "@workspace/email",
-  "version": "0.0.1",
-  "type": "module",
+  "name": "transactional",
+  "version": "1.0.0",
   "private": true,
-  "exports": {
-    "./client": "./src/client.ts",
-    "./server": "./src/server.ts",
-    "./templates/*": "./src/templates/*.tsx"
-  },
   "scripts": {
-    "lint": "eslint . --max-warnings 0",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "build": "email build",
+    "export": "email export"
   },
   "dependencies": {
-    "zod": "catalog:schemas",
-    "@react-email/components": "0.5.0",
-    "@react-email/render": "1.4.0",
-    "resend": "^6.1.2"
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
+    "react-email": "6.1.4"
   },
   "devDependencies": {
-    "@workspace/typescript-config": "workspace:*",
-    "@types/node": "^20.19.9",
-    "@types/react": "^19.1.9",
-    "@types/react-dom": "^19.1.7",
-    "typescript": "^5.9.2"
-  },
-  "peerDependencies": {
-    "react": "catalog:web",
-    "react-dom": "catalog:web"
+    "@react-email/ui": "6.1.4",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3"
   }
 }
