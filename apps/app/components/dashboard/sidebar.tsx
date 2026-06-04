@@ -19,17 +19,17 @@ import { NavMain } from "@/components/nav-main";
 const navItems = [
   {
     title: "Dashboard",
-    url: "/",
+    url: "",
     icon: LayoutDashboard,
   },
   {
     title: "Tasks",
-    url: "/tasks",
+    url: "tasks",
     icon: ListTodo,
   },
   {
     title: "Analytics",
-    url: "/analytics",
+    url: "analytics",
     icon: BarChart3,
   },
 ];
@@ -41,7 +41,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const itemsWithOrganizationSlug = navItems.map((item) => ({
     ...item,
-    url: `${dashboardBase}/${item.url}`,
+    url: item.url ? `${dashboardBase}/${item.url}` : dashboardBase,
   }));
 
   return (
