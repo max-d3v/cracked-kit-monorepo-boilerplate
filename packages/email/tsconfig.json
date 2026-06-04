@@ -1,11 +1,10 @@
 {
-  "extends": "@workspace/typescript-config/base.json",
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.json",
+  "include": ["."],
+  "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "jsx": "react-jsx",
-    "strictNullChecks": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+    "strict": true,
+    "jsx": "react-jsx"
+  }
 }

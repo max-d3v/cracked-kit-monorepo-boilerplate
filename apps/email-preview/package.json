@@ -1,0 +1,16 @@
+{
+  "name": "@workspace/email-preview",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "scripts": {
+    "dev": "cd ../../packages/email && email dev -p 3004",
+    "start": "cd ../../packages/email && email start"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
