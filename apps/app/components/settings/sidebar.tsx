@@ -1,5 +1,6 @@
 "use client";
 
+import { getOrganizationSlug } from "@workspace/auth/lib/utils";
 import {
   Sidebar,
   SidebarContent,
@@ -9,14 +10,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@workspace/ui/components/sidebar";
-import {
-  ArrowLeft,
-  Briefcase,
-  Settings,
-  Shield,
-  User,
-  Users,
-} from "lucide-react";
+import { ArrowLeft, Briefcase, Shield, User, Users } from "lucide-react";
 import Link from "next/link";
 import { NavMain } from "@/components/nav-main";
 
@@ -26,17 +20,17 @@ const navMain = [
     items: [
       {
         title: "Profile",
-        url: "/settings/account/profile",
+        url: "account/profile",
         icon: User,
       },
       {
         title: "Security",
-        url: "/settings/account/security",
+        url: "account/security",
         icon: Shield,
       },
       {
         title: "My Organizations",
-        url: "/settings/account/organizations",
+        url: "account/organizations",
         icon: Briefcase,
       },
     ],
@@ -45,13 +39,13 @@ const navMain = [
     title: "Organization",
     items: [
       {
-        title: "Settings",
-        url: "/settings/organization/settings",
-        icon: Settings,
+        title: "Profile",
+        url: "organization/profile",
+        icon: Briefcase,
       },
       {
         title: "People",
-        url: "/settings/organization/people",
+        url: "organization/people",
         icon: Users,
       },
     ],
@@ -61,13 +55,23 @@ const navMain = [
 export function SettingsSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const organizationSlug = getOrganizationSlug();
+  const settingsBase = `/${organizationSlug}/settings`;
+  const items = navMain.map((group) => ({
+    ...group,
+    items: group.items.map((item) => ({
+      ...item,
+      url: `${settingsBase}/${item.url}`,
+    })),
+  }));
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip="Back to app">
-              <Link href="/dashboard">
+              <Link href={`/${organizationSlug}/dashboard`}>
                 <ArrowLeft />
                 <span>Back to app</span>
               </Link>
@@ -76,7 +80,7 @@ export function SettingsSidebar({
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={navMain} />
+        <NavMain items={items} />
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
