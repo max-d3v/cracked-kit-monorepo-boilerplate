@@ -38,7 +38,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <OrganizationSwitcher />
+            <OrganizationSwitcher className="w-full justify-between" />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

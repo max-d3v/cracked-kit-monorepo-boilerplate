@@ -23,7 +23,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       navigate={({ to, replace }) =>
         replace ? router.replace(to) : router.push(to)
       }
-      plugins={[organizationPlugin()]}
+      plugins={[
+        organizationPlugin({
+          viewPaths: {
+            organization: {
+              settings: "../settings/organization/settings",
+              people: "../settings/organization/people",
+            },
+          },
+        }),
+      ]}
       redirectTo="/dashboard"
       socialProviders={["google"]}
       viewPaths={{
