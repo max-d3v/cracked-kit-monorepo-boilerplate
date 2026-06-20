@@ -1,6 +1,5 @@
 "use client";
 
-import { captureException } from "@workspace/observability/client";
 import { Button } from "@workspace/ui/components/button";
 import {
   Card,
@@ -11,7 +10,6 @@ import {
 } from "@workspace/ui/components/card";
 import { AlertTriangle, Home, RefreshCcw } from "lucide-react";
 import Link from "next/link";
-import { useEffect } from "react";
 
 type ErrorBoundaryProps = {
   readonly error: Error & { digest?: string };
@@ -19,10 +17,6 @@ type ErrorBoundaryProps = {
 };
 
 export default function ErrorBoundary({ error, reset }: ErrorBoundaryProps) {
-  useEffect(() => {
-    captureException(error);
-  }, [error]);
-
   return (
     <div className="flex min-h-[60vh] flex-1 items-center justify-center p-6">
       <Card className="w-full max-w-md border-destructive/50 bg-destructive/5">

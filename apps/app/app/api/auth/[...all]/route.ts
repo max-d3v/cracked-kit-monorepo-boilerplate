@@ -1,4 +1,19 @@
 import { auth } from "@workspace/auth/auth";
 import { toNextJsHandler } from "@workspace/auth/server";
+import { withRouteErrorHandling } from "@/lib/route-error-handler";
 
-export const { GET, POST } = toNextJsHandler(auth);
+const handlers = toNextJsHandler(auth);
+
+export const GET = withRouteErrorHandling(handlers.GET, {
+  route: "/api/auth/[...all]",
+  tags: {
+    route_kind: "auth",
+  },
+});
+
+export const POST = withRouteErrorHandling(handlers.POST, {
+  route: "/api/auth/[...all]",
+  tags: {
+    route_kind: "auth",
+  },
+});

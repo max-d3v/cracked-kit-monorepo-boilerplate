@@ -2,7 +2,6 @@
 
 import "@workspace/ui/globals.css";
 
-import { captureException } from "@workspace/observability/client";
 import { Button } from "@workspace/ui/components/button";
 import {
   Card,
@@ -13,7 +12,6 @@ import {
 } from "@workspace/ui/components/card";
 import { OrionLogo } from "@workspace/ui/components/orion-logo";
 import { AlertTriangle, Home, RefreshCcw } from "lucide-react";
-import { useEffect } from "react";
 
 type GlobalErrorProps = {
   readonly error: Error & { digest?: string };
@@ -21,10 +19,6 @@ type GlobalErrorProps = {
 };
 
 export default function GlobalError({ error, reset }: GlobalErrorProps) {
-  useEffect(() => {
-    captureException(error);
-  }, [error]);
-
   return (
     <html lang="en">
       <body className="min-h-screen bg-background font-sans antialiased">
