@@ -1,10 +1,10 @@
 {
-  "name": "orion-kit",
-  "author": "Martin Linde Persson",
+  "name": "cracked-kit",
+  "author": "Max Maul",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Mumma6/orion-kit"
+    "url": "https://github.com/max-d3v/cracked-kit-monorepo-boilerplate"
   },
   "version": "0.0.1",
   "private": true,

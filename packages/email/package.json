@@ -7,9 +7,11 @@
     "export": "email export"
   },
   "dependencies": {
+    "@types/node": "^26.1.0",
     "react": "19.2.1",
     "react-dom": "19.2.1",
-    "react-email": "6.1.4"
+    "react-email": "6.1.4",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@react-email/ui": "6.1.4",
