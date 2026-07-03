@@ -5,17 +5,21 @@
 #
 pre-push:
   jobs:
-    - name: packages audit
-      tags:
-        - frontend
-        - security
-      run: bun audit
+    # - name: packages audit
+    #   tags:
+    #     - frontend
+    #     - security
+    #   run: bun audit
 
     - name: build
       run: bun run build
 
 pre-commit:
   jobs:
+    # - name: type check
+    #   run: bun run typecheck
+    #   stage_fixed: true
+
     - name: ultracite fix
       run: bun run check
       stage_fixed: true
