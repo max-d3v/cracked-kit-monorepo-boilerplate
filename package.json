@@ -27,7 +27,7 @@
     "stripe:listen-dev": "stripe listen --forward-to localhost:3002/webhooks/stripe",
     "typecheck": "turbo typecheck",
     "prepare": "lefthook install",
-    "check": "ultracite check --write",
+    "check": "ultracite check",
     "fix": "ultracite fix"
   },
   "devDependencies": {
