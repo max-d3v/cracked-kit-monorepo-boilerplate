@@ -13,22 +13,31 @@ import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { ModeToggle } from "@/components/mode-toggle";
 
+const NULL_ORGANIZATION_SLUG = "null";
+
+function isNullOrganizationCrumb(path: string, index: number) {
+  return index === 0 && path === NULL_ORGANIZATION_SLUG;
+}
+
 export function DashboardHeader() {
   const pathname = usePathname();
 
-  const paths = pathname.split("/").filter(Boolean);
+  const breadcrumbs = useMemo(() => {
+    const paths = pathname.split("/").filter(Boolean);
+    const visibleCrumbs = paths
+      .map((path, index) => ({
+        path,
+        href: `/${paths.slice(0, index + 1).join("/")}`,
+      }))
+      .filter(({ path }, index) => !isNullOrganizationCrumb(path, index));
 
-  const breadcrumbs = useMemo(
-    () =>
-      paths.map((path, index) => {
-        const href = `/${paths.slice(0, index + 1).join("/")}`;
-        const label = path.charAt(0).toUpperCase() + path.slice(1);
-        const isLast = index === paths.length - 1;
+    return visibleCrumbs.map(({ href, path }, index) => {
+      const label = path.charAt(0).toUpperCase() + path.slice(1);
+      const isLast = index === visibleCrumbs.length - 1;
 
-        return { href, label, isLast };
-      }),
-    [paths]
-  );
+      return { href, label, isLast };
+    });
+  }, [pathname]);
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b">

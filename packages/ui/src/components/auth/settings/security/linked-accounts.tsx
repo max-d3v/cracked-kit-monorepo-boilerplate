@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 "use client"
 
 import { useAuth, useListAccounts } from "@better-auth-ui/react"

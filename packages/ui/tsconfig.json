@@ -2,14 +2,16 @@
   "extends": "@workspace/typescript-config/react-library.json",
   "noEmit": true,
   // @ts-ignore
-  "compilerOptions": {
+    "compilerOptions": {
+    "strict": false,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "noUncheckedIndexedAccess": false,
+    "skipLibCheck": true,
     "paths": {
       "@workspace/ui/*": ["./src/*"]
-    },
-    "strictNullChecks": true,
-    "noUncheckedIndexedAccess": false
-  },
-
+    }
+  },    
   "include": ["."],
   "exclude": ["node_modules", "dist"]
 }

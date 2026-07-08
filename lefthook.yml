@@ -16,9 +16,9 @@ pre-push:
 
 pre-commit:
   jobs:
-    # - name: type check
-    #   run: bun run typecheck
-    #   stage_fixed: true
+    - name: type check
+      run: bun run typecheck
+      stage_fixed: true
 
     - name: ultracite fix
       run: bun run check
