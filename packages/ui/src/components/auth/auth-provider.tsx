@@ -11,6 +11,11 @@ import type {
 
 import { ErrorToaster } from "./error-toaster"
 
+// Type-only side-effect import: registers the shadcn `AuthPlugin` widening
+// (see `lib/auth/auth-plugin`) in every program that renders this provider,
+// so `useAuth().plugins` exposes the component slots in consumer packages too.
+import type {} from "@workspace/ui/lib/auth/auth-plugin"
+
 declare module "@better-auth-ui/core" {
   interface AuthConfig {
     /**
