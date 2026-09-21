@@ -4,6 +4,7 @@ import {
   type OrganizationLocalization,
   type OrganizationPluginOptions
 } from "@better-auth-ui/core/plugins"
+import type { SettingsTab } from "@better-auth-ui/react"
 import { Briefcase } from "lucide-react"
 
 import { OrganizationsSettings } from "@workspace/ui/components/auth/organization/organizations-settings"
@@ -27,7 +28,7 @@ export const organizationPlugin = createAuthPlugin(
           ),
           component: OrganizationsSettings
         }
-      ]
+      ] satisfies SettingsTab[]
     }
   }
 )

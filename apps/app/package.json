@@ -12,8 +12,8 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@better-auth-ui/core": "^1.6.4",
-    "@better-auth-ui/react": "^1.6.4",
+    "@better-auth-ui/core": "catalog:auth",
+    "@better-auth-ui/react": "catalog:auth",
     "@hookform/resolvers": "^5.2.2",
     "@orpc/server": "catalog:data-layer",
     "@sentry/nextjs": "^9.0.0",

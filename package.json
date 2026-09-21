@@ -1,10 +1,10 @@
 {
-  "name": "orion-kit",
-  "author": "Martin Linde Persson",
+  "name": "cracked-kit",
+  "author": "Max Maul",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Mumma6/orion-kit"
+    "url": "https://github.com/max-d3v/cracked-kit-monorepo-boilerplate"
   },
   "version": "0.0.1",
   "private": true,
@@ -27,7 +27,7 @@
     "stripe:listen-dev": "stripe listen --forward-to localhost:3002/webhooks/stripe",
     "typecheck": "turbo typecheck",
     "prepare": "lefthook install",
-    "check": "ultracite check --write",
+    "check": "ultracite check",
     "fix": "ultracite fix"
   },
   "devDependencies": {
@@ -59,6 +59,14 @@
       "next": "^16.1.0",
       "react": "^19.2.4",
       "react-dom": "^19.2.4"
+    },
+    "auth": {
+      "@better-auth-ui/core": "^1.6.27",
+      "@better-auth-ui/react": "^1.6.27",
+      "@better-auth/expo": "^1.6.23",
+      "@better-auth/passkey": "^1.6.23",
+      "better-auth": "^1.6.23",
+      "better-auth-ui": "^3.2.27"
     },
     "data-layer": {
       "@orpc/otel": "^1.13.14",

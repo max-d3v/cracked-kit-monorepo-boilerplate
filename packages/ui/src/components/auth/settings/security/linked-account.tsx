@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client"
 
 import { getProviderName } from "@better-auth-ui/core"

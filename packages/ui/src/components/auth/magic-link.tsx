@@ -1,39 +1,37 @@
-"use client";
+"use client"
 
+import { authMutationKeys } from "@better-auth-ui/core"
 import {
   type MagicLinkAuthClient,
   useAuth,
-  useSignInMagicLink,
-} from "@better-auth-ui/react";
-import { Button } from "@workspace/ui/components/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/card";
+  useAuthPlugin,
+  useSignInMagicLink
+} from "@better-auth-ui/react"
+import { useIsMutating } from "@tanstack/react-query"
+import { type SyntheticEvent, useState } from "react"
+import { toast } from "sonner"
+
+import { Button } from "@workspace/ui/components/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card"
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
-  FieldSeparator,
-} from "@workspace/ui/components/field";
-import { Input } from "@workspace/ui/components/input";
-import { Label } from "@workspace/ui/components/label";
-import { Spinner } from "@workspace/ui/components/spinner";
-import { cn } from "@workspace/ui/lib/utils";
-import { type SyntheticEvent, useState } from "react";
-import { toast } from "sonner";
-import { MagicLinkButton } from "./magic-link-button";
-import { PasskeyButton } from "./passkey-button";
-import { ProviderButtons, type SocialLayout } from "./provider-buttons";
+  FieldSeparator
+} from "@workspace/ui/components/field"
+import { Input } from "@workspace/ui/components/input"
+import { Label } from "@workspace/ui/components/label"
+import { Spinner } from "@workspace/ui/components/spinner"
+import { magicLinkPlugin } from "@workspace/ui/lib/auth/magic-link-plugin"
+import { cn } from "@workspace/ui/lib/utils"
+import { ProviderButtons, type SocialLayout } from "./provider-buttons"
 
 export type MagicLinkProps = {
-  className?: string;
-  socialLayout?: SocialLayout;
-  socialPosition?: "top" | "bottom";
-};
+  className?: string
+  socialLayout?: SocialLayout
+  socialPosition?: "top" | "bottom"
+}
 
 /**
  * Render a card-based sign-in form that sends an email magic link and optionally shows social provider buttons.
@@ -46,42 +44,50 @@ export type MagicLinkProps = {
 export function MagicLink({
   className,
   socialLayout,
-  socialPosition = "bottom",
+  socialPosition = "bottom"
 }: MagicLinkProps) {
   const {
     authClient,
     basePaths,
     baseURL,
+    emailAndPassword,
     localization,
-    passkey,
+    plugins,
     redirectTo,
     socialProviders,
     viewPaths,
-    Link,
-  } = useAuth();
+    Link
+  } = useAuth()
+  const { localization: magicLinkLocalization } = useAuthPlugin(magicLinkPlugin)
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("")
 
-  const { mutate: signInMagicLink, isPending: magicLinkPending } =
+  const { mutate: signInMagicLink, isPending: signInMagicLinkPending } =
     useSignInMagicLink(authClient as MagicLinkAuthClient, {
       onSuccess: () => {
-        setEmail("");
-        toast.success(localization.auth.magicLinkSent);
-      },
-    });
+        setEmail("")
+        toast.success(magicLinkLocalization.magicLinkSent)
+      }
+    })
 
-  const isPending = magicLinkPending;
+  const signInMutating = useIsMutating({
+    mutationKey: authMutationKeys.signIn.all
+  })
+  const signUpMutating = useIsMutating({
+    mutationKey: authMutationKeys.signUp.all
+  })
+  const isPending = signInMutating + signUpMutating > 0
 
   const [fieldErrors, setFieldErrors] = useState<{
-    email?: string;
-  }>({});
+    email?: string
+  }>({})
 
   const handleSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    signInMagicLink({ email, callbackURL: `${baseURL}${redirectTo}` });
-  };
+    e.preventDefault()
+    signInMagicLink({ email, callbackURL: `${baseURL}${redirectTo}` })
+  }
 
-  const showSeparator = socialProviders && socialProviders.length > 0;
+  const showSeparator = socialProviders && socialProviders.length > 0
 
   return (
     <Card className={cn("w-full max-w-sm", className)}>
@@ -94,14 +100,11 @@ export function MagicLink({
           {socialPosition === "top" && (
             <>
               {socialProviders && socialProviders.length > 0 && (
-                <ProviderButtons
-                  isPending={isPending}
-                  socialLayout={socialLayout}
-                />
+                <ProviderButtons socialLayout={socialLayout} />
               )}
 
               {showSeparator && (
-                <FieldSeparator className="m-0 flex items-center text-xs *:data-[slot=field-separator-content]:bg-card">
+                <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card m-0 text-xs flex items-center">
                   {localization.auth.or}
                 </FieldSeparator>
               )}
@@ -114,46 +117,51 @@ export function MagicLink({
                 <Label htmlFor="email">{localization.auth.email}</Label>
 
                 <Input
-                  aria-invalid={!!fieldErrors.email}
-                  autoComplete="email"
-                  disabled={isPending}
                   id="email"
                   name="email"
+                  type="email"
+                  autoComplete="email"
+                  value={email}
                   onChange={(e) => {
-                    setEmail(e.target.value);
+                    setEmail(e.target.value)
 
                     setFieldErrors((prev) => ({
                       ...prev,
-                      email: undefined,
-                    }));
-                  }}
-                  onInvalid={(e) => {
-                    e.preventDefault();
-
-                    setFieldErrors((prev) => ({
-                      ...prev,
-                      email: (e.target as HTMLInputElement).validationMessage,
-                    }));
+                      email: undefined
+                    }))
                   }}
                   placeholder={localization.auth.emailPlaceholder}
                   required
-                  type="email"
-                  value={email}
+                  disabled={isPending}
+                  onInvalid={(e) => {
+                    e.preventDefault()
+
+                    setFieldErrors((prev) => ({
+                      ...prev,
+                      email: (e.target as HTMLInputElement).validationMessage
+                    }))
+                  }}
+                  aria-invalid={!!fieldErrors.email}
                 />
 
                 <FieldError>{fieldErrors.email}</FieldError>
               </Field>
 
               <div className="flex flex-col gap-3">
-                <Button disabled={isPending} type="submit">
-                  {isPending && <Spinner />}
+                <Button type="submit" disabled={isPending}>
+                  {signInMagicLinkPending && <Spinner />}
 
-                  {localization.auth.sendMagicLink}
+                  {magicLinkLocalization.sendMagicLink}
                 </Button>
 
-                <MagicLinkButton isPending={isPending} view="magicLink" />
-
-                {passkey && <PasskeyButton isPending={isPending} />}
+                {plugins.flatMap((plugin) =>
+                  (plugin.authButtons ?? []).map((AuthButton, index) => (
+                    <AuthButton
+                      key={`${plugin.id}-${index.toString()}`}
+                      view="magicLink"
+                    />
+                  ))
+                )}
               </div>
             </FieldGroup>
           </form>
@@ -161,33 +169,32 @@ export function MagicLink({
           {socialPosition === "bottom" && (
             <>
               {showSeparator && (
-                <FieldSeparator className="flex items-center text-xs *:data-[slot=field-separator-content]:bg-card">
+                <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card text-xs flex items-center">
                   {localization.auth.or}
                 </FieldSeparator>
               )}
 
               {socialProviders && socialProviders.length > 0 && (
-                <ProviderButtons
-                  isPending={isPending}
-                  socialLayout={socialLayout}
-                />
+                <ProviderButtons socialLayout={socialLayout} />
               )}
             </>
           )}
         </div>
 
-        <div className="mt-4 flex w-full flex-col items-center gap-3">
-          <FieldDescription className="text-center">
-            {localization.auth.needToCreateAnAccount}{" "}
-            <Link
-              className="underline underline-offset-4"
-              href={`${basePaths.auth}/${viewPaths.auth.signUp}`}
-            >
-              {localization.auth.signUp}
-            </Link>
-          </FieldDescription>
-        </div>
+        {emailAndPassword?.enabled && (
+          <div className="flex flex-col gap-3 items-center w-full mt-4">
+            <FieldDescription className="text-center">
+              {localization.auth.needToCreateAnAccount}{" "}
+              <Link
+                href={`${basePaths.auth}/${viewPaths.auth.signUp}`}
+                className="underline underline-offset-4"
+              >
+                {localization.auth.signUp}
+              </Link>
+            </FieldDescription>
+          </div>
+        )}
       </CardContent>
     </Card>
-  );
+  )
 }

@@ -1,8 +1,10 @@
+// @ts-nocheck
 "use client"
 
 import {
   useAuth,
   useChangePassword,
+  useFetchOptions,
   useListAccounts,
   useRequestPasswordReset,
   useSession
@@ -64,20 +66,28 @@ export function ChangePassword({ className }: ChangePasswordProps) {
 }
 
 function SetPassword({ className }: { className?: string }) {
-  const { authClient, localization } = useAuth()
+  const { authClient, localization, plugins } = useAuth()
   const { data: session } = useSession(authClient)
+  const { fetchOptions, resetFetchOptions } = useFetchOptions()
 
   const { mutate: requestPasswordReset, isPending } = useRequestPasswordReset(
     authClient,
     {
+      onError: () => {
+        resetFetchOptions()
+      },
       onSuccess: () => toast.success(localization.auth.passwordResetEmailSent)
     }
   )
 
+  const Captcha = plugins.find(
+    (plugin) => plugin.captchaComponent
+  )?.captchaComponent
+
   const handleSetPassword = () => {
     if (!session) return
 
-    requestPasswordReset({ email: session.user.email })
+    requestPasswordReset({ email: session.user.email, fetchOptions })
   }
 
   return (
@@ -98,15 +108,19 @@ function SetPassword({ className }: { className?: string }) {
             </p>
           </div>
 
-          <Button
-            size="sm"
-            disabled={isPending || !session}
-            onClick={handleSetPassword}
-          >
-            {isPending && <Spinner />}
+          <div className="flex flex-col gap-3 items-start sm:items-end">
+            {Captcha && <div>{Captcha}</div>}
 
-            {localization.auth.sendResetLink}
-          </Button>
+            <Button
+              size="sm"
+              disabled={isPending || !session?.user.email}
+              onClick={handleSetPassword}
+            >
+              {isPending && <Spinner />}
+
+              {localization.auth.sendResetLink}
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>

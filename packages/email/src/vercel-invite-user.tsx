@@ -15,6 +15,7 @@ import {
   Tailwind,
   Text,
 } from "react-email";
+import { keys } from "../keys";
 
 interface VercelInviteUserEmailProps {
   invitedByEmail?: string;
@@ -28,9 +29,7 @@ interface VercelInviteUserEmailProps {
   username?: string;
 }
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "";
+const baseUrl = keys().NEXT_PUBLIC_APP_URL;
 
 export const VercelInviteUserEmail = ({
   username = "zenorocha",

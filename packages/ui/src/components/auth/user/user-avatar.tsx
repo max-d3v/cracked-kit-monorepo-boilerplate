@@ -74,7 +74,7 @@ export function UserAvatar({
         }
       />
 
-      <AvatarFallback delayMs={resolvedUser?.image ? 600 : undefined}>
+      <AvatarFallback className="text-muted-foreground!">
         {fallback || initials || <User2 className="size-4" />}
       </AvatarFallback>
     </Avatar>

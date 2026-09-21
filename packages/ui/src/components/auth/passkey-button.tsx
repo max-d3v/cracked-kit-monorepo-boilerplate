@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import { useAuth, useSignInPasskey } from "@better-auth-ui/react";

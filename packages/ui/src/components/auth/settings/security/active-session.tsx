@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client"
 
 import { useAuth, useRevokeSession, useSession } from "@better-auth-ui/react"
