@@ -4,9 +4,9 @@ import { z } from "zod";
 export const keys = () =>
   createEnv({
     client: {
-      NEXT_PUBLIC_APP_URL: z.string().includes("http://"),
+      NEXT_PUBLIC_APP_URL: z.string().url(),
     },
     runtimeEnv: {
-      NEXT_PUBLIC_APP_URL: process.env.DATABASE_URL,
+      NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     },
   });
