@@ -24,7 +24,7 @@
     "@t3-oss/env-nextjs": "^0.13.10",
     "@workspace/types": "workspace:*",
     "@workspace/ui": "workspace:*",
-    "better-auth": "^1.6.9",
+    "better-auth": "catalog:auth",
     "next-themes": "^0.4.6",
     "react": "19.2.4",
     "server-only": "^0.0.1",

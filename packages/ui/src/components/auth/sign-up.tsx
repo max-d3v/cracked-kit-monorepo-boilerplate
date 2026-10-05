@@ -25,9 +25,9 @@ import {
   InputGroupButton,
   InputGroupInput
 } from "@workspace/ui/components/input-group"
+import { Label } from "@workspace/ui/components/label"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { cn } from "@workspace/ui/lib/utils"
-import { Label } from "../label"
 import { AdditionalField } from "./additional-field"
 import { ProviderButtons, type SocialLayout } from "./provider-buttons"
 
@@ -78,16 +78,17 @@ export function SignUp({
   const { mutate: signUpEmail, isPending: signUpEmailPending } = useSignUpEmail(
     authClient,
     {
-      onError: (error) => {
+      onError: () => {
         setPassword("")
         setConfirmPassword("")
-        toast.error(error.error?.message || error.message)
         resetFetchOptions()
       },
-      onSuccess: () => {
+      onSuccess: (_data, { email }) => {
         if (emailAndPassword?.requireEmailVerification) {
-          toast.success(localization.auth.verifyYourEmail)
-          navigate({ to: `${basePaths.auth}/${viewPaths.auth.signIn}` })
+          sessionStorage.setItem("better-auth-ui.verify-email", email)
+          navigate({
+            to: `${basePaths.auth}/${viewPaths.auth.verifyEmail}`
+          })
         } else {
           navigate({ to: redirectTo })
         }
@@ -218,7 +219,7 @@ export function SignUp({
 
                         setFieldErrors((prev) => ({
                           ...prev,
-                          name: (e.target as HTMLInputElement).validationMessage
+                          name: localization.auth.fieldRequired
                         }))
                       }}
                       aria-invalid={!!fieldErrors.name}
@@ -247,10 +248,14 @@ export function SignUp({
                     }}
                     onInvalid={(e) => {
                       e.preventDefault()
+                      const el = e.target as HTMLInputElement
+                      const msg = el.validity.valueMissing
+                        ? localization.auth.fieldRequired
+                        : localization.auth.invalidEmail
 
                       setFieldErrors((prev) => ({
                         ...prev,
-                        email: (e.target as HTMLInputElement).validationMessage
+                        email: msg
                       }))
                     }}
                     aria-invalid={!!fieldErrors.email}
@@ -295,11 +300,24 @@ export function SignUp({
                       disabled={isPending}
                       onInvalid={(e) => {
                         e.preventDefault()
+                        const el = e.target as HTMLInputElement
+                        const min = emailAndPassword?.minPasswordLength
+                        const max = emailAndPassword?.maxPasswordLength
+                        const msg = el.validity.valueMissing
+                          ? localization.auth.fieldRequired
+                          : el.validity.tooShort
+                            ? localization.auth.tooShort.replace(
+                                "{{min}}",
+                                String(min)
+                              )
+                            : localization.auth.tooLong.replace(
+                                "{{max}}",
+                                String(max)
+                              )
 
                         setFieldErrors((prev) => ({
                           ...prev,
-                          password: (e.target as HTMLInputElement)
-                            .validationMessage
+                          password: msg
                         }))
                       }}
                       aria-invalid={!!fieldErrors.password}
@@ -359,11 +377,24 @@ export function SignUp({
                         disabled={isPending}
                         onInvalid={(e) => {
                           e.preventDefault()
+                          const el = e.target as HTMLInputElement
+                          const min = emailAndPassword?.minPasswordLength
+                          const max = emailAndPassword?.maxPasswordLength
+                          const msg = el.validity.valueMissing
+                            ? localization.auth.fieldRequired
+                            : el.validity.tooShort
+                              ? localization.auth.tooShort.replace(
+                                  "{{min}}",
+                                  String(min)
+                                )
+                              : localization.auth.tooLong.replace(
+                                  "{{max}}",
+                                  String(max)
+                                )
 
                           setFieldErrors((prev) => ({
                             ...prev,
-                            confirmPassword: (e.target as HTMLInputElement)
-                              .validationMessage
+                            confirmPassword: msg
                           }))
                         }}
                         aria-invalid={!!fieldErrors.confirmPassword}

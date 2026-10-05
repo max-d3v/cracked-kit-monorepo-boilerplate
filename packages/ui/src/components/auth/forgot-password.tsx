@@ -17,9 +17,9 @@ import {
   FieldGroup
 } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
+import { Label } from "@workspace/ui/components/label"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { cn } from "@workspace/ui/lib/utils"
-import { Label } from "../label"
 
 export type ForgotPasswordProps = {
   className?: string
@@ -35,16 +35,22 @@ export type ForgotPasswordProps = {
  * @returns The forgot-password form UI as a JSX element
  */
 export function ForgotPassword({ className }: ForgotPasswordProps) {
-  const { authClient, basePaths, localization, plugins, viewPaths, Link } =
-    useAuth()
+  const {
+    authClient,
+    baseURL,
+    basePaths,
+    localization,
+    plugins,
+    viewPaths,
+    Link
+  } = useAuth()
 
   const { fetchOptions, resetFetchOptions } = useFetchOptions()
 
   const { mutate: requestPasswordReset, isPending } = useRequestPasswordReset(
     authClient,
     {
-      onError: (error) => {
-        toast.error(error.error?.message || error.message)
+      onError: () => {
         resetFetchOptions()
       },
       onSuccess: () => toast.success(localization.auth.passwordResetEmailSent)
@@ -56,6 +62,7 @@ export function ForgotPassword({ className }: ForgotPasswordProps) {
     const formData = new FormData(e.currentTarget)
     requestPasswordReset({
       email: formData.get("email") as string,
+      redirectTo: `${baseURL}${basePaths.auth}/${viewPaths.auth.resetPassword}`,
       fetchOptions
     })
   }
@@ -98,10 +105,14 @@ export function ForgotPassword({ className }: ForgotPasswordProps) {
                 }}
                 onInvalid={(e) => {
                   e.preventDefault()
+                  const el = e.target as HTMLInputElement
+                  const msg = el.validity.valueMissing
+                    ? localization.auth.fieldRequired
+                    : localization.auth.invalidEmail
 
                   setFieldErrors((prev) => ({
                     ...prev,
-                    email: (e.target as HTMLInputElement).validationMessage
+                    email: msg
                   }))
                 }}
                 aria-invalid={!!fieldErrors.email}

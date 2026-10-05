@@ -1,15 +1,9 @@
 "use client"
 
 import { authMutationKeys } from "@better-auth-ui/core"
-import {
-  useAuth,
-  useFetchOptions,
-  useSendVerificationEmail,
-  useSignInEmail
-} from "@better-auth-ui/react"
+import { useAuth, useFetchOptions, useSignInEmail } from "@better-auth-ui/react"
 import { useIsMutating } from "@tanstack/react-query"
 import { type SyntheticEvent, useState } from "react"
-import { toast } from "sonner"
 
 import { Button } from "@workspace/ui/components/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card"
@@ -49,7 +43,6 @@ export function SignIn({
   const {
     authClient,
     basePaths,
-    baseURL,
     emailAndPassword,
     localization,
     plugins,
@@ -64,13 +57,6 @@ export function SignIn({
 
   const [password, setPassword] = useState("")
 
-  const { mutate: sendVerificationEmail } = useSendVerificationEmail(
-    authClient,
-    {
-      onSuccess: () => toast.success(localization.auth.verificationEmailSent)
-    }
-  )
-
   const { mutate: signInEmail, isPending: signInEmailPending } = useSignInEmail(
     authClient,
     {
@@ -78,18 +64,10 @@ export function SignIn({
         setPassword("")
 
         if (error.error?.code === "EMAIL_NOT_VERIFIED") {
-          toast.error(error.error?.message || error.message, {
-            action: {
-              label: localization.auth.resend,
-              onClick: () =>
-                sendVerificationEmail({
-                  email,
-                  callbackURL: `${baseURL}${redirectTo}`
-                })
-            }
+          sessionStorage.setItem("better-auth-ui.verify-email", email)
+          navigate({
+            to: `${basePaths.auth}/${viewPaths.auth.verifyEmail}`
           })
-        } else {
-          toast.error(error.error?.message || error.message)
         }
 
         resetFetchOptions()
@@ -179,10 +157,14 @@ export function SignIn({
                     }}
                     onInvalid={(e) => {
                       e.preventDefault()
+                      const el = e.target as HTMLInputElement
+                      const msg = el.validity.valueMissing
+                        ? localization.auth.fieldRequired
+                        : localization.auth.invalidEmail
 
                       setFieldErrors((prev) => ({
                         ...prev,
-                        email: (e.target as HTMLInputElement).validationMessage
+                        email: msg
                       }))
                     }}
                     aria-invalid={!!fieldErrors.email}
@@ -215,11 +197,24 @@ export function SignIn({
                     disabled={isPending}
                     onInvalid={(e) => {
                       e.preventDefault()
+                      const el = e.target as HTMLInputElement
+                      const min = emailAndPassword?.minPasswordLength
+                      const max = emailAndPassword?.maxPasswordLength
+                      const msg = el.validity.valueMissing
+                        ? localization.auth.fieldRequired
+                        : el.validity.tooShort
+                          ? localization.auth.tooShort.replace(
+                              "{{min}}",
+                              String(min)
+                            )
+                          : localization.auth.tooLong.replace(
+                              "{{max}}",
+                              String(max)
+                            )
 
                       setFieldErrors((prev) => ({
                         ...prev,
-                        password: (e.target as HTMLInputElement)
-                          .validationMessage
+                        password: msg
                       }))
                     }}
                     aria-invalid={!!fieldErrors.password}
@@ -287,7 +282,7 @@ export function SignIn({
         </div>
 
         <div className="flex flex-col gap-3 items-center w-full mt-4">
-          {emailAndPassword?.forgotPassword && (
+          {emailAndPassword?.enabled && emailAndPassword?.forgotPassword && (
             <Link
               href={`${basePaths.auth}/${viewPaths.auth.forgotPassword}`}
               className="self-center text-sm underline-offset-4 hover:underline"

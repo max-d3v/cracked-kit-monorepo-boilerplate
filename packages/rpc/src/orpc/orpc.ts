@@ -9,7 +9,7 @@ declare global {
 
 const link = new RPCLink({
   url: () => {
-    if (typeof window === "undefined") {
+    if (!("window" in globalThis)) {
       throw new Error("RPCLink is not allowed on the server side.");
     }
 

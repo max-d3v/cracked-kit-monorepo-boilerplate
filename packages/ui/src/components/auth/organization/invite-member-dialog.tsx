@@ -55,6 +55,7 @@ export function InviteMemberDialog({
     useAuthPlugin(organizationPlugin)
 
   const [role, setRole] = useState(() => pickDefaultRole(Object.keys(roles)))
+  const [emailError, setEmailError] = useState<string>()
 
   useEffect(() => {
     setRole((current) => {
@@ -62,6 +63,10 @@ export function InviteMemberDialog({
       return keys.includes(current) ? current : pickDefaultRole(keys)
     })
   }, [roles])
+
+  useEffect(() => {
+    if (!open) setEmailError(undefined)
+  }, [open])
 
   const { mutate: inviteMember, isPending: isInviting } = useInviteMember(
     authClient as OrganizationAuthClient,
@@ -108,7 +113,7 @@ export function InviteMemberDialog({
           </AlertDialogHeader>
 
           <div className="flex flex-col gap-4">
-            <Field>
+            <Field data-invalid={!!emailError}>
               <Label htmlFor="invite-member-email">
                 {localization.auth.email}
               </Label>
@@ -121,9 +126,19 @@ export function InviteMemberDialog({
                 required
                 placeholder={localization.auth.email}
                 disabled={isInviting}
+                onChange={() => setEmailError(undefined)}
+                onInvalid={(e) => {
+                  e.preventDefault()
+                  const el = e.target as HTMLInputElement
+                  const msg = el.validity.valueMissing
+                    ? localization.auth.fieldRequired
+                    : localization.auth.invalidEmail
+                  setEmailError(msg)
+                }}
+                aria-invalid={!!emailError}
               />
 
-              <FieldError />
+              <FieldError>{emailError}</FieldError>
             </Field>
 
             <Field>
@@ -133,7 +148,7 @@ export function InviteMemberDialog({
 
               <Select
                 value={role}
-                onValueChange={setRole}
+                onValueChange={(value) => setRole(value ?? "")}
                 disabled={isInviting}
               >
                 <SelectTrigger id="invite-member-role" className="w-full">

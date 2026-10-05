@@ -36,7 +36,6 @@ export type UserProfileProps = {
  */
 export function UserProfile({ className }: UserProfileProps) {
   const { additionalFields, authClient, localization } = useAuth()
-  
   const { data: session } = useSession(authClient as UsernameAuthClient)
 
   const { mutate: updateUser, isPending } = useUpdateUser(authClient, {
@@ -86,7 +85,7 @@ export function UserProfile({ className }: UserProfileProps) {
   return (
     <div>
       <h2 className="text-sm font-semibold mb-3">
-        {localization.settings.profile}
+        {localization.settings.userProfile}
       </h2>
 
       <form onSubmit={handleSubmit}>
