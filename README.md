@@ -83,9 +83,12 @@ Create local env files:
 
 ```bash
 cp apps/app/.env.example apps/app/.env.local
-cp packages/database/env.example packages/database/.env
-cp packages/jobs/env.example packages/jobs/.env
+cp packages/database/.env.example packages/database/.env
 ```
+
+Every app and package that reads env vars ships a `.env.example` next to its
+`package.json` (e.g. `apps/mobile`, `packages/jobs`, `packages/auth`). Copy the
+ones you need to the file name noted at the top of each example.
 
 For local development with the bundled PostgreSQL container, use:
 
