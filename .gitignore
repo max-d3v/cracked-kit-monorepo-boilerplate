@@ -51,3 +51,5 @@ RFC.md
 .playwright-mcp/
 
 *.png
+
+.react-email
