@@ -1,13 +1,12 @@
 import { EVENTS } from "@workspace/analytics/events";
 import { capture } from "@workspace/analytics/server";
 import {
-  countByStatus,
   create,
   deleteOne,
   listAllByUserId,
   updateOne,
 } from "@workspace/repository/entities/tasks";
-import type { TaskStatusCount } from "@workspace/types/repository/tasks";
+import type { TaskRawObject } from "@workspace/types/repository/tasks";
 import type {
   CompleteTask,
   CreateTask,
@@ -16,16 +15,11 @@ import type {
   UpdateTask,
 } from "@workspace/types/use-cases/tasks";
 
-const toTaskCounts = (statusCounts: TaskStatusCount[]) => {
-  const countFor = (status: TaskStatusCount["status"]) =>
-    statusCounts.find((c) => c.status === status)?.count ?? 0;
-
-  return {
-    completed: countFor("completed"),
-    inProgress: countFor("in-progress"),
-    todo: countFor("todo"),
-  };
-};
+const countTasksByStatus = (tasks: TaskRawObject[]) => ({
+  completed: tasks.filter((t) => t.status === "completed").length,
+  inProgress: tasks.filter((t) => t.status === "in-progress").length,
+  todo: tasks.filter((t) => t.status === "todo").length,
+});
 
 // The tasks screens paginate on the client, so they need the full list
 // rather than the repository's default page.
@@ -37,12 +31,11 @@ export const getUserTasks = async (params: GetUserTasksInput) => {
 export const getUserTasksWithCount = async (params: GetUserTasksInput) => {
   const { userId } = params;
 
-  const [tasks, statusCounts] = await Promise.all([
-    listAllByUserId({ userId }),
-    countByStatus({ userId }),
-  ]);
-
-  return { tasks, taskCounts: toTaskCounts(statusCounts) };
+  // Counted from the same list so the counters always match `tasks`.
+  // Move counting into SQL once pagination moves to the server.
+  const tasks = await listAllByUserId({ userId });
+  const taskCounts = countTasksByStatus(tasks);
+  return { tasks, taskCounts };
 };
 
 export const createTask = async (params: CreateTask) => {

@@ -3,11 +3,6 @@ import type { ListBaseParams } from "./base";
 
 export type TaskRawObject = typeof task.$inferSelect;
 
-export type TaskStatusCount = {
-  status: TaskRawObject["status"];
-  count: number;
-};
-
 export type CreateTaskParams = typeof task.$inferInsert;
 
 export type UpdateTaskParams = Partial<typeof task.$inferInsert> & {
