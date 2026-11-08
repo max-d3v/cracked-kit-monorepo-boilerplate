@@ -1,3 +1,4 @@
+import { viewPaths } from "@better-auth-ui/core";
 import { Show } from "@workspace/ui/components/auth/custom/show";
 import { UserButton } from "@workspace/ui/components/auth/user/user-button";
 import { Button } from "@workspace/ui/components/button";
@@ -24,10 +25,10 @@ export default function RootPage() {
 
       <div className="flex gap-4">
         <Show when="signed-out">
-          <Link href="/login">
+          <Link href={`/auth/${viewPaths.auth.signIn}`}>
             <Button>Sign In</Button>
           </Link>
-          <Link href="/signup">
+          <Link href={`/auth/${viewPaths.auth.signUp}`}>
             <Button variant="outline">Sign Up</Button>
           </Link>
         </Show>
