@@ -91,6 +91,17 @@ export const list = async (params: ListTasksParams) => {
   return data;
 };
 
+export const listAllByUserId = async (params: {
+  userId: string;
+}): Promise<TaskRawObject[]> => {
+  const { userId } = params;
+
+  return await db.query.task.findMany({
+    where: eq(task.userId, userId),
+    orderBy: desc(task.createdAt),
+  });
+};
+
 export const get = async (params: GetTaskParams): Promise<TaskRawObject> => {
   const { id } = params;
 

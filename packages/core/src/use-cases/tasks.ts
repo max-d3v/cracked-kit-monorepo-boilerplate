@@ -3,7 +3,7 @@ import { capture } from "@workspace/analytics/server";
 import {
   create,
   deleteOne,
-  list,
+  listAllByUserId,
   updateOne,
 } from "@workspace/repository/entities/tasks";
 import type { TaskRawObject } from "@workspace/types/repository/tasks";
@@ -21,15 +21,19 @@ const countTasksByStatus = (tasks: TaskRawObject[]) => ({
   todo: tasks.filter((t) => t.status === "todo").length,
 });
 
+// The tasks screens paginate on the client, so they need the full list
+// rather than the repository's default page.
 export const getUserTasks = async (params: GetUserTasksInput) => {
   const { userId } = params;
-  return await list({ userId });
+  return await listAllByUserId({ userId });
 };
 
 export const getUserTasksWithCount = async (params: GetUserTasksInput) => {
   const { userId } = params;
 
-  const tasks = await list({ userId });
+  // Counted from the same list so the counters always match `tasks`.
+  // Move counting into SQL once pagination moves to the server.
+  const tasks = await listAllByUserId({ userId });
   const taskCounts = countTasksByStatus(tasks);
   return { tasks, taskCounts };
 };
