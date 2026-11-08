@@ -1,5 +1,13 @@
 import type { SQL, SQLWrapper } from "@workspace/database/client";
-import { and, db, desc, eq, ilike, or } from "@workspace/database/client";
+import {
+  and,
+  count,
+  db,
+  desc,
+  eq,
+  ilike,
+  or,
+} from "@workspace/database/client";
 import { organization, task } from "@workspace/database/schema";
 import { HttpError } from "@workspace/types/errors/http";
 import type {
@@ -9,6 +17,7 @@ import type {
   JoinableParams,
   ListTasksParams,
   TaskRawObject,
+  TaskStatusCount,
   UpdateTaskParams,
   WhereClauseParams,
 } from "@workspace/types/repository/tasks";
@@ -89,6 +98,29 @@ export const list = async (params: ListTasksParams) => {
   });
 
   return data;
+};
+
+export const listAllByUserId = async (params: {
+  userId: string;
+}): Promise<TaskRawObject[]> => {
+  const { userId } = params;
+
+  return await db.query.task.findMany({
+    where: eq(task.userId, userId),
+    orderBy: desc(task.createdAt),
+  });
+};
+
+export const countByStatus = async (params: {
+  userId: string;
+}): Promise<TaskStatusCount[]> => {
+  const { userId } = params;
+
+  return await db
+    .select({ status: task.status, count: count() })
+    .from(task)
+    .where(eq(task.userId, userId))
+    .groupBy(task.status);
 };
 
 export const get = async (params: GetTaskParams): Promise<TaskRawObject> => {

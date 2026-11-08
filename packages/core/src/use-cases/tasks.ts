@@ -1,12 +1,13 @@
 import { EVENTS } from "@workspace/analytics/events";
 import { capture } from "@workspace/analytics/server";
 import {
+  countByStatus,
   create,
   deleteOne,
-  list,
+  listAllByUserId,
   updateOne,
 } from "@workspace/repository/entities/tasks";
-import type { TaskRawObject } from "@workspace/types/repository/tasks";
+import type { TaskStatusCount } from "@workspace/types/repository/tasks";
 import type {
   CompleteTask,
   CreateTask,
@@ -15,23 +16,33 @@ import type {
   UpdateTask,
 } from "@workspace/types/use-cases/tasks";
 
-const countTasksByStatus = (tasks: TaskRawObject[]) => ({
-  completed: tasks.filter((t) => t.status === "completed").length,
-  inProgress: tasks.filter((t) => t.status === "in-progress").length,
-  todo: tasks.filter((t) => t.status === "todo").length,
-});
+const toTaskCounts = (statusCounts: TaskStatusCount[]) => {
+  const countFor = (status: TaskStatusCount["status"]) =>
+    statusCounts.find((c) => c.status === status)?.count ?? 0;
 
+  return {
+    completed: countFor("completed"),
+    inProgress: countFor("in-progress"),
+    todo: countFor("todo"),
+  };
+};
+
+// The tasks screens paginate on the client, so they need the full list
+// rather than the repository's default page.
 export const getUserTasks = async (params: GetUserTasksInput) => {
   const { userId } = params;
-  return await list({ userId });
+  return await listAllByUserId({ userId });
 };
 
 export const getUserTasksWithCount = async (params: GetUserTasksInput) => {
   const { userId } = params;
 
-  const tasks = await list({ userId });
-  const taskCounts = countTasksByStatus(tasks);
-  return { tasks, taskCounts };
+  const [tasks, statusCounts] = await Promise.all([
+    listAllByUserId({ userId }),
+    countByStatus({ userId }),
+  ]);
+
+  return { tasks, taskCounts: toTaskCounts(statusCounts) };
 };
 
 export const createTask = async (params: CreateTask) => {
