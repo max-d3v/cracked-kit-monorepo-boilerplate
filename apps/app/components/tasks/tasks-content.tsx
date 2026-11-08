@@ -14,6 +14,7 @@ import { TasksFilters } from "@/components/tasks/tasks-filters";
 import { TasksStats } from "@/components/tasks/tasks-stats";
 import { TasksTable } from "@/components/tasks/tasks-table";
 import { useTasksContext } from "./context";
+import { paginate } from "./paginate";
 
 export function TasksContent() {
   const queryClient = useQueryClient();
@@ -57,16 +58,23 @@ export function TasksContent() {
     });
   }, [tasks, statusFilter, searchQuery]);
 
-  const totalPages = Math.ceil(filteredTasks.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedTasks = filteredTasks.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  const {
+    page,
+    pageItems: paginatedTasks,
+    totalPages,
+  } = paginate(filteredTasks, currentPage, itemsPerPage);
 
   useEffect(() => {
     setTotalPages(totalPages);
   }, [totalPages, setTotalPages]);
+
+  // Keep the shared page in sync when the list shrinks past the current page,
+  // so the paginator highlights the page actually being shown.
+  useEffect(() => {
+    if (page !== currentPage) {
+      setCurrentPage(page);
+    }
+  }, [page, currentPage, setCurrentPage]);
 
   const handleStatusChange = async (task: Task, newStatus: Task["status"]) => {
     await updateTask({ id: task.id, status: newStatus });
