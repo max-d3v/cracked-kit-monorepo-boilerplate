@@ -80,15 +80,6 @@
         "starlight-theme-nova": "^0.9.5",
       },
     },
-    "apps/email-preview": {
-      "name": "@workspace/email-preview",
-      "devDependencies": {
-        "@types/bun": "latest",
-      },
-      "peerDependencies": {
-        "typescript": "^5",
-      },
-    },
     "apps/marketing-websites/brutalism": {
       "name": "@workspace/brutalism",
       "version": "0.0.1",
@@ -1994,8 +1985,6 @@
     "@workspace/database": ["@workspace/database@workspace:packages/database"],
 
     "@workspace/docs": ["@workspace/docs@workspace:apps/docs"],
-
-    "@workspace/email-preview": ["@workspace/email-preview@workspace:apps/email-preview"],
 
     "@workspace/futuristic": ["@workspace/futuristic@workspace:apps/marketing-websites/futuristic-ai"],
 
