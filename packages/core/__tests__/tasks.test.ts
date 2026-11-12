@@ -3,7 +3,7 @@ import { capture } from "@workspace/analytics/server";
 import {
   create,
   deleteOne,
-  list,
+  listAllByUserId,
   updateOne,
 } from "@workspace/repository/entities/tasks";
 import { HttpError } from "@workspace/types/errors/http";
@@ -21,21 +21,18 @@ import { makeTask, TASK_ID, USER_ID } from "./fixtures";
 vi.mock("@workspace/repository/entities/tasks", () => ({
   create: vi.fn(),
   deleteOne: vi.fn(),
-  list: vi.fn(),
+  listAllByUserId: vi.fn(),
   updateOne: vi.fn(),
 }));
 vi.mock("@workspace/analytics/server", () => ({ capture: vi.fn() }));
 
-/** `list` is typed with its optional relations; the use-cases only read task fields. */
-type TaskList = Awaited<ReturnType<typeof list>>;
-
 describe("getUserTasks", () => {
   it("lists only the given user's tasks", async () => {
     const tasks = [makeTask()];
-    vi.mocked(list).mockResolvedValue(tasks as TaskList);
+    vi.mocked(listAllByUserId).mockResolvedValue(tasks);
 
     await expect(getUserTasks({ userId: USER_ID })).resolves.toBe(tasks);
-    expect(list).toHaveBeenCalledWith({ userId: USER_ID });
+    expect(listAllByUserId).toHaveBeenCalledWith({ userId: USER_ID });
   });
 });
 
@@ -48,7 +45,7 @@ describe("getUserTasksWithCount", () => {
       makeTask({ status: "completed" }),
       makeTask({ status: "cancelled" }),
     ];
-    vi.mocked(list).mockResolvedValue(tasks as TaskList);
+    vi.mocked(listAllByUserId).mockResolvedValue(tasks);
 
     const result = await getUserTasksWithCount({ userId: USER_ID });
 
@@ -57,7 +54,7 @@ describe("getUserTasksWithCount", () => {
   });
 
   it("returns zero counts when the user has no tasks", async () => {
-    vi.mocked(list).mockResolvedValue([]);
+    vi.mocked(listAllByUserId).mockResolvedValue([]);
 
     const result = await getUserTasksWithCount({ userId: USER_ID });
 

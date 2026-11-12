@@ -40,7 +40,7 @@ export default defineConfig({
         },
         test: {
           name: "app",
-          include: ["apps/app/__tests__/**/*.{test,spec}.{js,ts,tsx}"],
+          include: ["apps/app/**/__tests__/**/*.{test,spec}.{js,ts,tsx}"],
         },
       },
     ],
