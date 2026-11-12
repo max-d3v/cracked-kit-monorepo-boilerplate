@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { TASK_ID } from "../../../test-utils/ids";
 import { createCheckoutSessionInputSchema } from "../src/use-cases/billing";
 import { stripeWebhookInputSchema } from "../src/use-cases/payments";
 import {
@@ -7,8 +8,6 @@ import {
   updateTaskInputSchema,
 } from "../src/use-cases/tasks";
 import { updateProfileInputSchema } from "../src/use-cases/users";
-
-const TASK_ID = "6f1c2a4e-8b3d-4c7a-9e2f-1a2b3c4d5e6f";
 
 describe("createTaskInputSchema", () => {
   it("accepts a title with optional description", () => {

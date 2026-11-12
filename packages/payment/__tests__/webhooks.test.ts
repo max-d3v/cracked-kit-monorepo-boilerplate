@@ -8,37 +8,14 @@ import {
   handleWebhookEvent,
   type WebhookDatabaseAdapter,
 } from "../src/webhooks";
+import { makeStripeSubscription, PERIOD_END } from "./fixtures";
 
 vi.mock("../src/server", () => ({ getStripe: vi.fn() }));
 
-// 2026-01-01T00:00:00.000Z, as Stripe sends it (seconds since epoch).
-const PERIOD_END_SECONDS = 1_767_225_600;
-const PERIOD_END = new Date("2026-01-01T00:00:00.000Z");
-
 const retrieveSubscription = vi.fn();
 
-const makeSubscription = (params: {
-  priceId?: string;
-  userId?: string;
-}): Stripe.Subscription =>
-  ({
-    id: "sub_123",
-    customer: "cus_123",
-    status: "active",
-    current_period_end: PERIOD_END_SECONDS,
-    metadata: params.userId ? { userId: params.userId } : {},
-    items: {
-      data: params.priceId ? [{ price: { id: params.priceId } }] : [],
-    },
-  }) as unknown as Stripe.Subscription;
-
 const makeSession = (
-  session: Partial<
-    Pick<
-      Stripe.Checkout.Session,
-      "metadata" | "client_reference_id" | "subscription"
-    >
-  >
+  session: Partial<Stripe.Checkout.Session>
 ): Stripe.Checkout.Session =>
   ({
     metadata: {},
@@ -76,7 +53,7 @@ beforeEach(() => {
 describe("handleCheckoutCompleted", () => {
   it("stores the Stripe subscription for the user in the session metadata", async () => {
     retrieveSubscription.mockResolvedValue(
-      makeSubscription({ priceId: "price_test_pro" })
+      makeStripeSubscription({ priceId: "price_test_pro" })
     );
 
     await handleCheckoutCompleted(
@@ -98,7 +75,7 @@ describe("handleCheckoutCompleted", () => {
 
   it("falls back to client_reference_id and expanded subscription objects", async () => {
     retrieveSubscription.mockResolvedValue(
-      makeSubscription({ priceId: "price_test_enterprise" })
+      makeStripeSubscription({ priceId: "price_test_enterprise" })
     );
 
     await handleCheckoutCompleted(
@@ -131,7 +108,7 @@ describe("handleCheckoutCompleted", () => {
 
   it("rejects subscriptions whose price does not map to a plan", async () => {
     retrieveSubscription.mockResolvedValue(
-      makeSubscription({ priceId: "price_unknown" })
+      makeStripeSubscription({ priceId: "price_unknown" })
     );
 
     await expect(
@@ -147,7 +124,10 @@ describe("handleCheckoutCompleted", () => {
 describe("handleSubscriptionUpdated", () => {
   it("syncs the new plan for the user", async () => {
     await handleSubscriptionUpdated(
-      makeSubscription({ userId: "user_1", priceId: "price_test_enterprise" }),
+      makeStripeSubscription({
+        userId: "user_1",
+        priceId: "price_test_enterprise",
+      }),
       db
     );
 
@@ -166,7 +146,7 @@ describe("handleSubscriptionUpdated", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
 
     await handleSubscriptionUpdated(
-      makeSubscription({ priceId: "price_test_pro" }),
+      makeStripeSubscription({ priceId: "price_test_pro" }),
       db
     );
 
@@ -177,7 +157,7 @@ describe("handleSubscriptionUpdated", () => {
   it("rejects unknown prices", async () => {
     await expect(
       handleSubscriptionUpdated(
-        makeSubscription({ userId: "user_1", priceId: "price_unknown" }),
+        makeStripeSubscription({ userId: "user_1", priceId: "price_unknown" }),
         db
       )
     ).rejects.toThrow("Invalid price ID or plan not found");
@@ -186,7 +166,10 @@ describe("handleSubscriptionUpdated", () => {
 
 describe("handleSubscriptionDeleted", () => {
   it("cancels the user's subscription", async () => {
-    await handleSubscriptionDeleted(makeSubscription({ userId: "user_1" }), db);
+    await handleSubscriptionDeleted(
+      makeStripeSubscription({ userId: "user_1" }),
+      db
+    );
 
     expect(db.cancelUserSubscription).toHaveBeenCalledWith("user_1");
   });
@@ -194,7 +177,7 @@ describe("handleSubscriptionDeleted", () => {
   it("ignores subscriptions that are not linked to a user", async () => {
     vi.spyOn(console, "warn").mockImplementation(() => undefined);
 
-    await handleSubscriptionDeleted(makeSubscription({}), db);
+    await handleSubscriptionDeleted(makeStripeSubscription({}), db);
 
     expect(db.cancelUserSubscription).not.toHaveBeenCalled();
   });
@@ -203,7 +186,7 @@ describe("handleSubscriptionDeleted", () => {
 describe("handleWebhookEvent", () => {
   it("routes checkout.session.completed to the checkout handler", async () => {
     retrieveSubscription.mockResolvedValue(
-      makeSubscription({ priceId: "price_test_pro" })
+      makeStripeSubscription({ priceId: "price_test_pro" })
     );
 
     await handleWebhookEvent(
@@ -223,7 +206,7 @@ describe("handleWebhookEvent", () => {
     await handleWebhookEvent(
       makeEvent(
         "customer.subscription.updated",
-        makeSubscription({ userId: "user_1", priceId: "price_test_pro" })
+        makeStripeSubscription({ userId: "user_1", priceId: "price_test_pro" })
       ),
       db
     );
@@ -236,7 +219,7 @@ describe("handleWebhookEvent", () => {
     await handleWebhookEvent(
       makeEvent(
         "customer.subscription.deleted",
-        makeSubscription({ userId: "user_1" })
+        makeStripeSubscription({ userId: "user_1" })
       ),
       db
     );

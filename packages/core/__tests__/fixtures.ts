@@ -1,9 +1,9 @@
 import type { SubscriptionRawObject } from "@workspace/types/repository/subscription";
 import type { TaskRawObject } from "@workspace/types/repository/tasks";
 import type { UserRawObject } from "@workspace/types/repository/users";
+import { TASK_ID, USER_ID } from "../../../test-utils/ids";
 
-export const USER_ID = "user_1";
-export const TASK_ID = "6f1c2a4e-8b3d-4c7a-9e2f-1a2b3c4d5e6f";
+export { TASK_ID, USER_ID } from "../../../test-utils/ids";
 
 const CREATED_AT = new Date("2026-01-01T00:00:00.000Z");
 

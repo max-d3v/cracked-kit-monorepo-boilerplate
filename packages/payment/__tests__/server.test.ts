@@ -1,4 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
+import { importWithEnv } from "../../../test-utils/import-with-env";
+import { makeStripeSubscription } from "./fixtures";
 
 const stripe = vi.hoisted(() => ({
   constructed: vi.fn(),
@@ -23,20 +25,12 @@ vi.mock("stripe", () => ({
   },
 }));
 
-// 2026-01-01T00:00:00.000Z, as Stripe sends it (seconds since epoch).
-const PERIOD_END_SECONDS = 1_767_225_600;
-
 /**
  * Env is read when the module is first evaluated, so each test re-imports the
  * module after stubbing the env it needs.
  */
-const loadServer = async (env: Record<string, string> = {}) => {
-  for (const [key, value] of Object.entries(env)) {
-    vi.stubEnv(key, value);
-  }
-  vi.resetModules();
-  return await import("../src/server");
-};
+const loadServer = (env: Record<string, string> = {}) =>
+  importWithEnv(env, () => import("../src/server"));
 
 const withStripeKey = { STRIPE_SECRET_KEY: "sk_test_123" };
 
@@ -125,19 +119,10 @@ describe("createBillingPortalSession", () => {
 });
 
 describe("getSubscription", () => {
-  const stripeSubscription = (priceId: string) => ({
-    id: "sub_123",
-    customer: "cus_123",
-    status: "active",
-    cancel_at_period_end: false,
-    current_period_end: PERIOD_END_SECONDS,
-    items: { data: [{ price: { id: priceId } }] },
-  });
-
   it("maps the Stripe subscription to the app's shape", async () => {
     const { getSubscription } = await loadServer(withStripeKey);
     stripe.retrieveSubscription.mockResolvedValue(
-      stripeSubscription("price_test_pro")
+      makeStripeSubscription({ priceId: "price_test_pro" })
     );
 
     await expect(getSubscription("sub_123")).resolves.toEqual({
@@ -154,7 +139,7 @@ describe("getSubscription", () => {
   it("falls back to the free plan for unknown prices", async () => {
     const { getSubscription } = await loadServer(withStripeKey);
     stripe.retrieveSubscription.mockResolvedValue(
-      stripeSubscription("price_unknown")
+      makeStripeSubscription({ priceId: "price_unknown" })
     );
 
     const result = await getSubscription("sub_123");

@@ -16,6 +16,7 @@ import {
 import { deleteAccount, updateProfile } from "@workspace/core/use-cases/users";
 import { captureException } from "@workspace/observability/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { TASK_ID, USER_ID } from "../../../test-utils/ids";
 import { router } from "../src/router";
 
 vi.mock("@workspace/auth/auth", () => ({
@@ -44,21 +45,41 @@ vi.mock("@workspace/core/use-cases/users", () => ({
   updateProfile: vi.fn(),
 }));
 
-const USER_ID = "user_1";
-const TASK_ID = "6f1c2a4e-8b3d-4c7a-9e2f-1a2b3c4d5e6f";
-
 const headers = new Headers({ cookie: "better-auth.session_token=abc" });
 const client = createRouterClient(router, { context: { headers } });
 
+const SIGNED_IN_AT = new Date("2026-01-01T00:00:00.000Z");
+
+// What `auth.api.getSession` resolves to for a signed-in user. Typed, so the
+// mock has to keep up with every field `authMiddleware` can read.
+const session: typeof auth.$Infer.Session = {
+  user: {
+    id: USER_ID,
+    name: "Ada Lovelace",
+    email: "ada@example.com",
+    emailVerified: true,
+    image: null,
+    createdAt: SIGNED_IN_AT,
+    updatedAt: SIGNED_IN_AT,
+  },
+  session: {
+    id: "session_1",
+    userId: USER_ID,
+    token: "abc",
+    expiresAt: new Date("2026-01-08T00:00:00.000Z"),
+    ipAddress: null,
+    userAgent: null,
+    createdAt: SIGNED_IN_AT,
+    updatedAt: SIGNED_IN_AT,
+  },
+};
+
 const signIn = () => {
-  vi.mocked(auth.api.getSession).mockResolvedValue({
-    user: { id: USER_ID, email: "ada@example.com" },
-    session: { id: "session_1", userId: USER_ID },
-  } as never);
+  vi.mocked(auth.api.getSession).mockResolvedValue(session);
 };
 
 const signOut = () => {
-  vi.mocked(auth.api.getSession).mockResolvedValue(null as never);
+  vi.mocked(auth.api.getSession).mockResolvedValue(null);
 };
 
 describe("authentication", () => {

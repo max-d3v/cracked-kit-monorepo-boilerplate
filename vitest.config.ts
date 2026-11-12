@@ -29,7 +29,18 @@ export default defineConfig({
         extends: true,
         test: {
           name: "packages",
-          include: ["packages/**/__tests__/**/*.{test,spec}.{js,ts,tsx}"],
+          // Also picks up tests in every app except apps/app, which has its
+          // own project for the `@/` alias, so a new app's tests always run.
+          include: [
+            "packages/**/__tests__/**/*.{test,spec}.{js,ts,tsx}",
+            "apps/**/__tests__/**/*.{test,spec}.{js,ts,tsx}",
+          ],
+          exclude: [
+            "**/node_modules/**",
+            "**/dist/**",
+            "**/.next/**",
+            "apps/app/**",
+          ],
         },
       },
       {

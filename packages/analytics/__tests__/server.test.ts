@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { importWithEnv } from "../../../test-utils/import-with-env";
 import { EVENTS } from "../src/structure/events";
 
 const posthog = vi.hoisted(() => ({
@@ -18,13 +19,8 @@ vi.mock("posthog-node", () => ({
 }));
 
 /** Keys are read when the module is evaluated, so re-import after stubbing. */
-const loadServer = async (env: Record<string, string> = {}) => {
-  for (const [key, value] of Object.entries(env)) {
-    vi.stubEnv(key, value);
-  }
-  vi.resetModules();
-  return await import("../src/server");
-};
+const loadServer = (env: Record<string, string> = {}) =>
+  importWithEnv(env, () => import("../src/server"));
 
 const event = {
   event: EVENTS.task_created,
