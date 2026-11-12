@@ -3,16 +3,15 @@
 #   Refer for explanation to following link:
 #   https://lefthook.dev/configuration/
 #
-pre-push:
-  jobs:
-    # - name: packages audit
-    #   tags:
-    #     - frontend
-    #     - security
-    #   run: bun audit
-
-    - name: build
-      run: bun run build
+# No full `bun run build` on pre-push: it is slow, needs every app's local
+# .env secrets, and CI/Vercel already build each PR.
+# pre-push:
+#   jobs:
+#     - name: packages audit
+#       tags:
+#         - frontend
+#         - security
+#       run: bun audit
 
 pre-commit:
   jobs:
