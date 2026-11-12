@@ -32,12 +32,18 @@ describe("Payment Config Utilities", () => {
 
   describe("getPlanByPriceId", () => {
     it("should return plan for matching priceId", () => {
-      const proPlan = PLANS.find((p) => p.id === "pro");
-      if (proPlan?.priceId) {
-        const plan = getPlanByPriceId(proPlan.priceId);
-        expect(plan).toBeDefined();
-        expect(plan?.id).toBe("pro");
-      }
+      // Price IDs come from env; vitest.config.ts sets deterministic test values.
+      expect(getPlanByPriceId("price_test_pro")?.id).toBe("pro");
+      expect(getPlanByPriceId("price_test_enterprise")?.id).toBe("enterprise");
+    });
+
+    it("should read paid plan price IDs from env", () => {
+      const priceIds = PLANS.map((p) => [p.id, p.priceId]);
+      expect(priceIds).toEqual([
+        ["free", undefined],
+        ["pro", "price_test_pro"],
+        ["enterprise", "price_test_enterprise"],
+      ]);
     });
 
     it("should return undefined for non-existent priceId", () => {

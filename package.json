@@ -15,6 +15,7 @@
     "dev:web": "turbo dev --filter=@workspace/web --filter=@workspace/docs",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test": "vitest",
+    "test:run": "vitest run",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "db:generate": "pnpm --filter @workspace/database db:generate",
